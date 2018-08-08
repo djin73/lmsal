@@ -1,0 +1,23 @@
+@/net/charon/Users/zoe/alignsot_test
+#usersubarea=1
+print, 'SCROLL UP FOR WHAT TO ENTER'
+read, a
+b = ''
+read, b
+i1=50 i2=250  j1=50  j2=250
+#drift=0	;1 allows linear drift, 0 for completely rigid
+#dflag=0 ;delete input files flag, 1 to delete, 0 to not (better be sure!)
+#kstart=0 #kend=a-1 #cont=0
+
+ref_file='FG' + b + 'a_corrected0000.fits'
+name_ext='fits'
+name_ext_rig='.rig'
+disk_out=''
+r_ref=-1.0	;ref angle, if lt 0 or undefined, the first set defines it
+			;but then remember to use the derived value for any
+			;other runs of movies in this set
+#datacompress=0		;data compress output if 1, 0 for normal
+name_set='FG' + b + 'a_corrected'
+run getrigid
+run untwist
+quit
