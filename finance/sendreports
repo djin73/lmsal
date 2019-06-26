@@ -1,0 +1,169 @@
+'Brian Chen - Macro to e-mail out weekly labor reports easier      --- edited 3/12/2019 daniel jin, got rid of LUVOIR and OST
+'                                                                  --- edited 4/2/2019 daniel jin, added back XRT
+'                                                                  --- last edited 5/6/2019 daniel jin, added back SECCHI with .xlsx change
+
+' make sure the arrays for e-mail fields are global
+
+Public subject As Variant
+Public address As Variant
+Public filepath As Variant
+
+#If VBA7 Then
+    Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As LongPtr)
+#Else
+    Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+#End If
+    
+
+
+Sub JinSendReports()
+   
+    Dim week As String
+    week = InputBox("Week # of the labor reports:") ' take in week #
+    Dim year As String
+    year = InputBox("Enter year:")      ' take in year # - added 2/4/19
+    
+    'initialize variables for different projects
+    
+    ' Dim AIA As String, IRIS As String, SOLARB As String, XRT As String, ICON As String, IRAD As String, SXI As String, SECCHI As String, SW As String, LUVOIR As String, OST As String '
+   ' Dim AIA_add As String, IRIS_add As String, SOLARB_add As String, XRT_add As String, ICON_add As String, IRAD_add As String, SXI_add As String, SECCHI_add As String, SW_add As String, LUVOIR_add As String, OST_add As String'
+   'no XRT'
+     Dim AIA As String, IRIS As String, SOLARB As String, ICON As String, IRAD As String, SXI As String, SECCHI As String, SW As String, LUVOIR As String, OST As String, MUSE As String
+     Dim AIA_add As String, IRIS_add As String, SOLARB_add As String, ICON_add As String, IRAD_add As String, SXI_add As String, SECCHI_add As String, SW_add As String, LUVOIR_add As String, OST_add As String, MUSE_add As String
+     
+     
+    ' TEMP No IRIS and Solar-B'
+    ' Dim AIA As String, ICON As String, IRAD As String, SXI As String, SECCHI As String, SW As String, LUVOIR As String, OST As String, MUSE As String
+    ' Dim AIA_add As String, ICON_add As String, IRAD_add As String, SXI_add As String, SECCHI_add As String, SW_add As String, LUVOIR_add As String, OST_add As String, MUSE_add As String
+     
+    ' file template names, change year and name as necessary
+    
+    AIA = "AIA Labor Report Wk" & week
+    IRIS = "IRIS Phase E Labor Report by WBS " & year & " (Wk" & week & ")"
+    SOLARB = "SOLAR-B Phase E Labor Report by WBS " & year & " (Wk" & week & ")"
+    XRT = "XRT Labor Report Wk" & week
+    ' dead now ICON = "ICON Labor Report by WBS 2017 (Wk" & week & ")"
+    IRAD = "IRAD Labor Report Wk" & week
+    SXI = "SXI Labor Report Wk" & week
+    SECCHI = year & "_wk_" & week & "_SECCHI_labor_report"
+   ' SW = "Space Weather Labor Report Wk" & week'
+    LUVOIR = "LUVOIR Labor Report Wk" & week
+    OST = "OST Labor Report Wk" & week
+    MUSE = "MUSE Labor Report Wk" & week
+    LYNX = "LYNX Labor Report Wk" & week
+    ' makeshift contact groups, feel free to add or change as necessary
+    
+    AIA_add = "Bob Honeycutt <bob.honeycutt@lmco.com>; Scott Green <green@lmsal.com>; Landon Nishimura <landon.nishimura@lmco.com>"
+    IRIS_add = "Bart De Pontieu <bdp@lmsal.com>; Bob Honeycutt <bob.honeycutt@lmco.com>; Kushner, Gary D (gary.d.kushner@lmco.com); Scott Green <green@lmsal.com>; Landon Nishimura <landon.nishimura@lmco.com>"
+    SOLARB_add = "Bob Honeycutt <bob.honeycutt@lmco.com>; Scott Green <green@lmsal.com>; Landon Nishimura <landon.nishimura@lmco.com>"
+    XRT_add = "Bob Honeycutt <bob.honeycutt@lmco.com>; Scott Green <green@lmsal.com>"
+    ' dead now ICON_add = "Bob Honeycutt <bob.honeycutt@lmco.com>; Scott Green <green@lmsal.com>"
+    IRAD_add = "Bob Honeycutt <bob.honeycutt@lmco.com>; Scott Green <green@lmsal.com>"
+    SXI_add = "Bob Honeycutt <bob.honeycutt@lmco.com>; George Koerner <george.koerner@lmco.com>"
+    SECCHI_add = "Bob Honeycutt <bob.honeycutt@lmco.com>; Nariaki Nitta <nitta@lmsal.com>"
+   ' SW_add = "Bob Honeycutt <bob.honeycutt@lmco.com>"'
+'    LUVOIR_add = "Bob Honeycutt <bob.honeycutt@lmco.com>"
+'    OST_add = "Bob Honeycutt <bob.honeycutt@lmco.com>"
+    MUSE_add = "Bob Honeycutt <bob.honeycutt@lmco.com>; Kushner, Gary D (gary.d.kushner@lmco.com); Hoffmann, Christopher M <christopher.m.hoffmann@lmco.com>"
+    LYNX_add = "Bob Honeycutt <bob.honeycutt@lmco.com>"
+
+    
+    
+    
+    ' initializing and setting filepaths, change year and path as necessary
+    
+    Dim basepath As String, irispath As String, solarbpath As String, iconpath As String
+    
+    basepath = "C:\Users\n5899b\Documents\Weekly Labor Reports\" & year & "\Week " & week & "\"
+    irispath = "C:\Users\n5899b\Documents\IRIS\" & year & " Labor Reports\"
+    solarbpath = "C:\Users\n5899b\Documents\SOLAR-B\" & year & " Labor Reports\"
+    ' dead now iconpath = "C:\Users\n5899b\Documents\ICON\2017 Labor Reports\"
+    
+    ' just variables for file extensions
+   
+    Dim ext1 As String, ext2 As String, ext3 As String
+    
+    ext1 = ".xls"
+    ext2 = ".xlsm"
+    ext3 = ".xlsx"
+    
+  '  Debug.Print basepath & AIA & ext1, irispath & IRIS & ext2, solarbpath & SOLARB & ext2, basepath & XRT & ext2, iconpath & ICON & ext2, basepath & IRAD & ext1, basepath & SXI & ext1, basepath & SECCHI & ext1, basepath & WFIRST & ext1, basepath & GLM & ext1
+  ' test address line  address = Array("bchen@lmsal.com", "bchen@lmsal.com", "bchen@lmsal.com", "bchen@lmsal.com", "bchen@lmsal.com", "bchen@lmsal.com", "bchen@lmsal.com", "bchen@lmsal.com", "bchen@lmsal.com", "bchen@lmsal.com")
+  '  address = Array("Brian Chen <bchen@lmsal.com>", "Brian Chen <bchen@lmsal.com>")
+  
+  ' arrays to store the subject, address, and filepath of the e-mails, add or remove entries as necessary
+  
+  '  subject = Array(AIA, IRIS, SOLARB, XRT, IRAD, SXI, SECCHI, SW, LUVOIR, OST)'
+   ' address = Array(AIA_add, IRIS_add, SOLARB_add, XRT_add, IRAD_add, SXI_add, SECCHI_add, SW_add, LUVOIR_add, OST_add)'
+    'filepath = Array(basepath & AIA & ext1, irispath & IRIS & ext2, solarbpath & SOLARB & ext2, basepath & XRT & ext2, basepath & IRAD & ext1, basepath & SXI & ext1, basepath & SECCHI & ext1, basepath & SW & ext1, basepath & LUVOIR & ext1, basepath & OST & ext1)'
+
+    'everything corrected
+ '   subject = Array(AIA & " corrected", IRIS & " corrected", SOLARB & " corrected", IRAD & " corrected", SXI & " corrected", SECCHI & " corrected", LUVOIR & " corrected", OST & " corrected", MUSE & " corrected", LYNX & " corrected")
+  '  address = Array(AIA_add, IRIS_add, SOLARB_add, IRAD_add, SXI_add, SECCHI_add, LUVOIR_add, OST_add, MUSE_add, LYNX_add)
+  '  filepath = Array(basepath & AIA & ext1, irispath & IRIS & ext2, solarbpath & SOLARB & ext2, basepath & IRAD & ext1, basepath & SXI & ext1, basepath & SECCHI & ext1, basepath & LUVOIR & ext1, basepath & OST & ext1, basepath & MUSE & ext1, basepath & LYNX & ext1)
+   
+   'everything (no LUVOIR or OST, yes XRT)
+    subject = Array(AIA, IRIS, SOLARB, IRAD, SXI, MUSE, LYNX, XRT, SECCHI)
+    address = Array(AIA_add, IRIS_add, SOLARB_add, IRAD_add, SXI_add, MUSE_add, LYNX_add, XRT_add, SECCHI_add)
+    filepath = Array(basepath & AIA & ext1, irispath & IRIS & ext2, solarbpath & SOLARB & ext2, basepath & IRAD & ext1, basepath & SXI & ext1, basepath & MUSE & ext1, basepath & LYNX & ext1, basepath & XRT & ext1, basepath & SECCHI & ext3)
+   
+   'no IRIS or Solar-B
+   ' subject = Array(AIA, IRAD, SXI, SECCHI, LUVOIR, OST, MUSE, LYNX)
+   ' address = Array(AIA_add, IRAD_add, SXI_add, SECCHI_add, LUVOIR_add, OST_add, MUSE_add, LYNX_add)
+   ' filepath = Array(basepath & AIA & ext1, basepath & IRAD & ext1, basepath & SXI & ext1, basepath & SECCHI & ext1, basepath & LUVOIR & ext1, basepath & OST & ext1, basepath & MUSE & ext1, basepath & LYNX & ext1)
+    
+    'no IRIS
+    'subject = Array(SOLARB, AIA, IRAD, SXI, SECCHI, LUVOIR, OST, MUSE, LYNX)
+    'address = Array(SOLARB_add, AIA_add, IRAD_add, SXI_add, SECCHI_add, LUVOIR_add, OST_add, MUSE_add, LYNX_add)
+   ' filepath = Array(solarbpath & SOLARB & ext2, basepath & AIA & ext1, basepath & IRAD & ext1, basepath & SXI & ext1, basepath & SECCHI & ext1, basepath & LUVOIR & ext1, basepath & OST & ext1, basepath & MUSE & ext1, basepath & LYNX & ext1)
+    
+    'no Solar-B
+ '  subject = Array(IRIS, AIA, IRAD, SXI, SECCHI, LUVOIR, OST, MUSE, LYNX)
+  ' address = Array(IRIS_add, AIA_add, IRAD_add, SXI_add, SECCHI_add, LUVOIR_add, OST_add, MUSE_add, LYNX_add)
+   ' filepath = Array(irispath & IRIS & ext2, basepath & AIA & ext1, basepath & IRAD & ext1, basepath & SXI & ext1, basepath & SECCHI & ext1, basepath & LUVOIR & ext1, basepath & OST & ext1, basepath & MUSE & ext1, basepath & LYNX & ext1)
+    
+    
+    'only IRIS
+   ' subject = Array(IRIS)
+   ' address = Array(IRIS_add)
+    'filepath = Array(irispath & IRIS & ext2)
+    
+    'only Solar-B
+  '  subject = Array(SOLARB)
+  '  address = Array(SOLARB_add)
+   ' filepath = Array(solarbpath & SOLARB & ext2)
+    
+    Dim i As Integer
+    i = 0
+     
+    While i < 11   ' 10 can be changed if total project number is changed
+        Call SendMail(i)
+        i = i + 1
+    Wend
+
+End Sub
+
+' simple function to send mail with the given information
+
+Function SendMail(index As Integer)
+
+Dim olApp As Outlook.Application
+Dim olMsg As Outlook.MailItem
+Dim olAtt As Outlook.Attachments
+
+Set olApp = Outlook.Application
+Set olMsg = olApp.CreateItem(0)
+Set olAtt = olMsg.Attachments
+
+
+olAtt.Add (filepath(index))
+
+With olMsg
+  .subject = subject(index)
+  .To = address(index)
+  Sleep (300)
+' .Display
+  .Send
+End With
+
+End Function
