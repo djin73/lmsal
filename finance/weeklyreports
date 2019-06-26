@@ -1,0 +1,154 @@
+'last updated 6/21/19 Daniel Jin, added new reports and WEBI revisions
+
+Sub JinWeeklyReports()
+
+' run macros on reports, name files correctly, save to correct directories
+
+'
+Dim iris_dir As String
+Dim solarb_dir As String
+Dim weekly_dir As String
+Dim SECCHI_title As String
+Dim IRIS_format As String
+Dim IRIS_raw As String
+Dim SOLARB_format As String
+Dim SOLARB_raw As String
+Dim headcount_title As String
+Dim headcount_names(7) As String
+Dim irisformat_dir As String
+Dim irisraw_dir As String
+Dim solarbformat_dir As String
+Dim solarbraw_dir As String
+Dim week As String
+Dim year As String
+
+
+Dim oWB As Excel.Workbook
+Dim oApp As Excel.Application
+
+Set oApp = New Excel.Application
+
+
+
+week = InputBox("Enter week #:", "Enter")
+year = InputBox("Enter year:", "Enter")
+
+base_dir = "C:\Users\n5899b\ATC_FormattedData"
+raw_dir = "C:\Users\n5899b\ATC_RawData"
+iris_dir = "C:\Users\n5899b\Documents\IRIS\"
+solarb_dir = "C:\Users\n5899b\Documents\SOLAR-B\"
+weekly_dir = "C:\Users\n5899b\Documents\Weekly Labor Reports\" & year & "\" & "Week " & week & "\"
+irisformat_dir = iris_dir & "IRIS Headcount Data (" & year & ")\new IRIS Headcount Data (wk" & week & ").xls"
+irisraw_dir = iris_dir & "IRIS Raw Data (" & year & ")\new IRIS wk " & week & " Raw Data.xls"
+solarbformat_dir = solarb_dir & "SOLAR B Headcount Data (" & year & ")\new SOLAR-B Headcount Data (wk" & week & ").xls"
+solarbraw_dir = solarb_dir & "Solar B Raw Data (" & year & ")\new Solar B wk " & week & " Raw Data.xls"
+
+
+
+headcount_title = " Labor Report Wk" & week & ".xls"
+SECCHI_title = year & "_wk_" & week & "_SECCHI_labor_report.xls"
+
+headcount_names(0) = "SXI"
+headcount_names(1) = "AIA"
+headcount_names(3) = "IRAD"
+headcount_names(4) = "XRT"
+'headcount_names(4) = "LUVOIR"
+'headcount_names(5) = "OST"
+headcount_names(5) = "Petrinec"
+headcount_names(6) = "MUSE"
+headcount_names(7) = "LYNX"
+
+
+Dim i As Integer
+i = 0
+
+Application.DisplayAlerts = False
+'issues with read only and calling Macros
+Dim openname As String
+Dim savename As String
+
+
+While i <= 9
+    
+    If (i = 2) Then
+        i = i + 1
+    End If
+    
+    openname = base_dir & i & ".xls"
+    If i = 2 Then
+        'Debug.Print SECCHI_title
+        'savename = weekly_dir & SECCHI_title
+        i = i + 1 'skip SECCHI until fixed
+    ElseIf i = 8 Then
+        Debug.Print irisformat_dir
+        savename = irisformat_dir
+    ElseIf i = 9 Then
+        Debug.Print solarbformat_dir
+        savename = solarbformat_dir
+    Else
+        ' set file names for headcount files
+        headcount_names(i) = headcount_names(i) & headcount_title
+        Debug.Print headcount_names(i)
+        savename = weekly_dir & headcount_names(i)
+        
+'        Workbooks.Open (base_dir & i & ".xls")
+'        Debug.Print "Step 1"
+'        Call WeeklyLaborReportsSADE_FINAL
+'        ActiveWorkbook.SaveAs Filename:=weekly_dir & headcount_names(i)
+'        ActiveWorkbook.Close
+'        Debug.Print "Step 2"
+        
+        
+'        Set oWB = oApp.Workbooks.Open(Filename:=base_dir & i & ".xls")
+'        Debug.Print "Step 1"
+'        oApp.Run ("WeeklyLaborReportsSADE_FINAL")
+'
+'        Debug.Print "Step 2"
+'        oWB.SaveAs Filename:=weekly_dir & headcount_names(i)
+'        Debut.Print "File Saved"
+'        oWB.Close SaveChanges:=False
+'        Set oWB = Nothing
+        
+    End If
+    
+   Debug.Print (i)
+    Workbooks.Open (openname)
+    Debug.Print "Step 1"
+    
+    'webi change
+    Call WeeklyLaborReportsSADE_WEBI_REVISED
+    ActiveWorkbook.SaveAs Filename:=savename
+    ActiveWorkbook.Close
+    Debug.Print "Step 2"
+    
+    
+    i = i + 1
+Wend
+
+
+'IRIS and SOLAR-B raw data
+openname = raw_dir & "0.xls"
+savename = irisraw_dir
+
+Debug.Print savename
+Workbooks.Open (openname)
+Debug.Print "Step 1"
+ActiveWorkbook.SaveAs Filename:=savename
+ActiveWorkbook.Close
+Debug.Print "Step 2"
+
+openname = raw_dir & "1.xls"
+savename = solarbraw_dir
+Debug.Print savename
+Workbooks.Open (openname)
+Debug.Print "Step 1"
+ActiveWorkbook.SaveAs Filename:=savename
+ActiveWorkbook.Close
+Debug.Print "Step 2"
+
+'Workbooks.open
+'Call WeeklyLaborReportsSADE_FINAL
+Debug.Print "Macro Complete!"
+
+'
+End Sub
