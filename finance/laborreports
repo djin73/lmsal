@@ -1,0 +1,616 @@
+' Daniel Jin   Macro for formatting IRIS and SOLAR-B labor reports - last updated 6/20/19 (WEBI revision)
+
+
+Public weeknum As Integer, prevweek As Integer
+Public year As String, month As String, newmonth As Boolean, weekhours As String, weekthismonth As String
+
+Sub JinLaborReports()
+
+' Turning off updates and alerts to make program run faster?
+Application.DisplayAlerts = False
+Application.ScreenUpdating = False
+
+' Input box for all the info needed to complete weekly report -- can't think of better way to do this?
+Dim datadump As String
+datadump = InputBox("wk #, year, month, wk this month, wk hrs", "Enter")
+
+'Splitting string into separate numbers, assigning to individual variables
+Dim sepdata() As String
+sepdata = Split(datadump, ", ", , vbTextCompare)
+
+weeknum = CInt(sepdata(0))
+prevweek = weeknum - 1
+year = sepdata(1)
+month = sepdata(2)
+weekthismonth = sepdata(3)
+weekhours = sepdata(4)
+
+newmonth = False
+If weekthismonth = "1" Then
+    newmonth = True
+End If
+
+' Directories for the labor reports that need these edits
+' As of 2017 ICON is dead so it has been removed
+Dim IRISfinal As String, IRIShead As String, IRISraw As String, IRISprev As String
+Dim SOLARBfinal As String, SOLARBhead As String, SOLARBraw As String, SOLARBprev As String
+
+IRISfinal = "C:\Users\n5899b\Documents\IRIS\" & year & " Labor Reports\IRIS Phase E Labor Report by WBS " & year & " (Wk" & CStr(weeknum) & ").xlsm"
+IRIShead = "C:\Users\n5899b\Documents\IRIS\IRIS Headcount Data (" & year & ")\new IRIS Headcount Data (wk" & CStr(weeknum) & ").xls"
+IRISraw = "C:\Users\n5899b\Documents\IRIS\IRIS Raw Data (" & year & ")\new IRIS wk " & CStr(weeknum) & " Raw Data.xls"
+IRISprev = "C:\Users\n5899b\Documents\IRIS\" & year & " Labor Reports\IRIS Phase E Labor Report by WBS " & year & " (Wk" & CStr(prevweek) & ").xlsm"
+
+SOLARBfinal = "C:\Users\n5899b\Documents\SOLAR-B\" & year & " Labor Reports\SOLAR-B Phase E Labor Report by WBS " & year & " (Wk" & CStr(weeknum) & ").xlsm"
+SOLARBhead = "C:\Users\n5899b\Documents\SOLAR-B\SOLAR B Headcount Data (" & year & ")\new SOLAR-B Headcount Data (wk" & CStr(weeknum) & ").xls"
+SOLARBraw = "C:\Users\n5899b\Documents\SOLAR-B\SOLAR B Raw Data (" & year & ")\new Solar B wk " & CStr(weeknum) & " Raw Data.xls"
+SOLARBprev = "C:\Users\n5899b\Documents\SOLAR-B\" & year & " Labor Reports\SOLAR-B Phase E Labor Report by WBS " & year & " (Wk" & CStr(prevweek) & ").xlsm"
+
+' Running the program
+' In the event that there is a new project, need to update and create new function ProcessReport_PROJECTNAME
+' Instructions shown in ProcessReport_DEMO
+' Call ProcessReport_DEMO(dir1, dir2, dir3, dir4, bool)
+'Call ProcessReport_IRIS(IRISfinal, IRIShead, IRISraw, IRISprev, True)
+Call ProcessReport_SOLARB(SOLARBfinal, SOLARBhead, SOLARBraw, SOLARBprev, False)
+
+'Turning updates and alerts back on -- is this even necessary?
+Application.DisplayAlerts = True
+Application.ScreenUpdating = True
+
+End Sub
+
+Sub ProcessReport_IRIS(reportname As String, headname As String, rawname As String, prevname As String, refresh As Boolean)
+
+Dim finalreport As Workbook, headcount As Workbook, rawdata As Workbook, prevreport As Workbook
+
+'Initializing new complete labor report
+
+Set prevreport = Workbooks.Open(prevname)
+
+Set prevreport = Workbooks.Open(prevname)
+
+prevreport.SaveCopyAs reportname
+
+Set finalreport = Workbooks.Open(reportname)
+
+prevreport.Close
+
+'Copying new headcount data over
+
+Set headcount = Workbooks.Open(headname)
+
+Dim headws1 As Worksheet, headws2 As Worksheet
+
+Set headws1 = finalreport.Sheets("Headcount Data")
+Set headws2 = headcount.Sheets("Labor Hours")
+
+headws2.Copy Before:=headws1
+headcount.Close
+
+headws1.Delete
+
+finalreport.Sheets("Labor Hours").Name = "Headcount Data"
+
+'Copying new raw data over
+
+Set rawdata = Workbooks.Open(rawname)
+
+rawdata.Sheets("Labor Hours").Rows("1:5").Delete
+
+finalreport.Sheets("Data from BW").Cells(1, 1).Copy Destination:=rawdata.Sheets("Labor Hours").Cells(1, 1)
+rawdata.Sheets("Labor Hours").Columns(1).Copy Destination:=finalreport.Sheets("Data from BW").Columns(1)
+
+finalreport.Sheets("Data from BW").Range("C1:G1").Copy Destination:=rawdata.Sheets("Labor Hours").Range("C1:G1")
+rawdata.Sheets("Labor Hours").Columns("C:G").Copy Destination:=finalreport.Sheets("Data from BW").Columns("C:G")
+
+rawdata.Close
+
+'Updating EPs
+
+Dim monthnum As String, weekword As String
+
+Select Case month
+    Case "January"
+        monthnum = "01"
+    Case "February"
+        monthnum = "02"
+    Case "March"
+        monthnum = "03"
+    Case "April"
+        monthnum = "04"
+    Case "May"
+        monthnum = "05"
+    Case "June"
+        monthnum = "06"
+    Case "July"
+        monthnum = "07"
+    Case "August"
+        monthnum = "08"
+    Case "September"
+        monthnum = "09"
+    Case "October"
+        monthnum = "10"
+    Case "November"
+        monthnum = "11"
+    Case "December"
+        monthnum = "12"
+End Select
+
+Select Case weekthismonth
+    Case "1"
+        weekword = "1st"
+    Case "2"
+        weekword = "2nd"
+    Case "3"
+        weekword = "3rd"
+    Case "4"
+        weekword = "4th"
+    Case "5"
+        weekword = "5th"
+End Select
+
+Dim monthyear, weekyear
+
+monthyear = year & "/" & monthnum
+If weeknum < 10 Then
+    weekyear = year & "0" & weeknum
+Else
+    weekyear = year & weeknum
+End If
+
+finalreport.Sheets("EPs").Cells(3, 5).Value = monthyear
+finalreport.Sheets("EPs").Cells(4, 5).Value = weekyear
+
+If newmonth = True Then
+    finalreport.Sheets("EPs").Cells(3, 6).Value = "0"
+End If
+
+Dim cumulhrs As String
+cumulhrs = "= " & finalreport.Sheets("EPs").Cells(3, 6).Value & " + " & weekhours
+
+finalreport.Sheets("EPs").Cells(3, 6).Value = cumulhrs
+finalreport.Sheets("EPs").Cells(4, 6).Value = weekhours
+
+'Updating EP Chart
+
+finalreport.Sheets("EP Chart").ChartObjects("Chart 2").Chart.HasTitle = True
+finalreport.Sheets("EP Chart").ChartObjects("Chart 2").Chart.ChartTitle.Text = "IRIS EP Chart" & vbCr & month & " " & year & " - wk " & weekthismonth
+
+finalreport.Sheets("EP Chart").Cells(34, 3).Value = "*Current month actuals (" & month & ") thru " & weekword & " week."
+
+Dim xpos As Integer
+
+Debug.Print "monthnum " & monthnum
+
+month = CInt(monthnum)
+
+If month > 9 Then
+    xpos = month - 3
+Else
+    xpos = month + 9
+End If
+
+'xpos = CInt(monthnum) + 9
+'shift actuals
+
+finalreport.Sheets("EP Chart").Cells(31, xpos).Value = finalreport.Sheets("EPs").Cells(21, 6).Value
+
+'Refreshing Report
+
+If refresh = True Then
+    'finalreport.Sheets("Report").EnableCalculation = False
+    'finalreport.Sheets("Report").EnableCalculation = True
+    Sheets("Report").PivotTables("PivotTable1").PivotCache.refresh
+End If
+
+finalreport.Sheets("EP Chart").Activate
+finalreport.Save
+
+End Sub
+
+Sub ProcessReport_SOLARB(reportname As String, headname As String, rawname As String, prevname As String, refresh As Boolean)
+
+Dim finalreport As Workbook, headcount As Workbook, rawdata As Workbook, prevreport As Workbook
+
+'Initializing new complete labor report
+
+Set prevreport = Workbooks.Open(prevname)
+
+Set prevreport = Workbooks.Open(prevname)
+
+prevreport.SaveCopyAs reportname
+
+Set finalreport = Workbooks.Open(reportname)
+
+prevreport.Close
+
+'Copying new headcount data over
+
+Set headcount = Workbooks.Open(headname)
+
+Dim headws1 As Worksheet, headws2 As Worksheet
+
+Set headws1 = finalreport.Sheets("Headcount Data")
+Set headws2 = headcount.Sheets("Labor Hours")
+
+headws2.Copy Before:=headws1
+headcount.Close
+
+headws1.Delete
+
+finalreport.Sheets("Labor Hours").Name = "Headcount Data"
+
+'Copying new raw data over
+
+Set rawdata = Workbooks.Open(rawname)
+
+rawdata.Sheets("Labor Hours").Rows("1:5").Delete
+
+finalreport.Sheets("Data from BW").Cells(1, 1).Copy Destination:=rawdata.Sheets("Labor Hours").Cells(1, 1)
+rawdata.Sheets("Labor Hours").Columns(1).Copy Destination:=finalreport.Sheets("Data from BW").Columns(1)
+
+finalreport.Sheets("Data from BW").Range("C1:G1").Copy Destination:=rawdata.Sheets("Labor Hours").Range("C1:G1")
+rawdata.Sheets("Labor Hours").Columns("C:G").Copy Destination:=finalreport.Sheets("Data from BW").Columns("C:G")
+
+rawdata.Close
+
+'Updating EPs
+
+Dim monthnum As String, weekword As String
+
+Select Case month
+    Case "January"
+        monthnum = "01"
+    Case "February"
+        monthnum = "02"
+    Case "March"
+        monthnum = "03"
+    Case "April"
+        monthnum = "04"
+    Case "May"
+        monthnum = "05"
+    Case "June"
+        monthnum = "06"
+    Case "July"
+        monthnum = "07"
+    Case "August"
+        monthnum = "08"
+    Case "September"
+        monthnum = "09"
+    Case "October"
+        monthnum = "10"
+    Case "November"
+        monthnum = "11"
+    Case "December"
+        monthnum = "12"
+End Select
+
+Debug.Print "monthnum1 " & monthnum
+
+Select Case weekthismonth
+    Case "1"
+        weekword = "1st"
+    Case "2"
+        weekword = "2nd"
+    Case "3"
+        weekword = "3rd"
+    Case "4"
+        weekword = "4th"
+    Case "5"
+        weekword = "5th"
+End Select
+
+Dim monthyear, weekyear
+
+monthyear = year & "/" & monthnum
+If weeknum < 10 Then
+    weekyear = year & "0" & weeknum
+Else
+    weekyear = year & weeknum
+End If
+
+finalreport.Sheets("EPs").Cells(3, 5).Value = monthyear
+finalreport.Sheets("EPs").Cells(4, 5).Value = weekyear
+
+If newmonth = True Then
+    finalreport.Sheets("EPs").Cells(3, 6).Value = "0"
+End If
+
+Dim cumulhrs As String
+cumulhrs = "= " & finalreport.Sheets("EPs").Cells(3, 6).Value & " + " & weekhours
+
+finalreport.Sheets("EPs").Cells(3, 6).Value = cumulhrs
+finalreport.Sheets("EPs").Cells(4, 6).Value = weekhours
+Debug.Print "monthnum2 " & monthnum
+'Updating EP Chart
+
+finalreport.Sheets("EP Chart").ChartObjects("Chart 2").Chart.HasTitle = True
+finalreport.Sheets("EP Chart").ChartObjects("Chart 2").Chart.ChartTitle.Text = "Solar-B EP Chart" & vbCr & month & " " & year & " - wk " & weekthismonth
+
+finalreport.Sheets("EP Chart").Cells(34, 3).Value = "*Current month actuals (" & month & ") thru " & weekword & " week."
+
+Dim xpos As Integer
+Dim monthInt As Integer
+
+Debug.Print "monthnum3 " & monthnum
+monthInt = CInt(monthnum)
+'Debug.Print "monthInt " & monthInt
+
+
+'xpos = CInt(monthnum) + 6
+
+If monthInt > 10 Then
+    xpos = monthInt - 6
+Else
+    xpos = monthInt + 6
+End If
+
+finalreport.Sheets("EP Chart").Cells(31, xpos).Value = finalreport.Sheets("EPs").Cells(31, 6).Value
+
+'Refreshing Report
+
+If refresh = True Then
+    Sheets("Report").PivotTables("PivotTable1").PivotCache.refresh
+End If
+
+finalreport.Sheets("EP Chart").Activate
+finalreport.Save
+
+End Sub
+
+Sub ProcessReport_DEMO(reportname As String, headname As String, rawname As String, prevname As String, refresh As Boolean)
+
+Dim finalreport As Workbook, headcount As Workbook, rawdata As Workbook, prevreport As Workbook
+
+'Initializing new complete labor report
+
+Set prevreport = Workbooks.Open(prevname)
+
+Set prevreport = Workbooks.Open(prevname)
+
+prevreport.SaveCopyAs reportname
+
+Set finalreport = Workbooks.Open(reportname)
+
+prevreport.Close
+
+'Copying new headcount data over
+
+Set headcount = Workbooks.Open(headname)
+
+Dim headws1 As Worksheet, headws2 As Worksheet
+
+Set headws1 = finalreport.Sheets("Headcount Data")
+Set headws2 = headcount.Sheets("Labor Hours")
+
+headws2.Copy Before:=headws1
+headcount.Close
+
+headws1.Delete
+
+finalreport.Sheets("Labor Hours").Name = "Headcount Data"
+
+'Copying new raw data over
+
+Set rawdata = Workbooks.Open(rawname)
+
+rawdata.Sheets("Labor Hours").Rows("1:2").Delete
+
+finalreport.Sheets("Data from BW").Cells(1, 1).Copy Destination:=rawdata.Sheets("Sheet 1").Cells(1, 1)
+rawdata.Sheets("Sheet 1").Columns(1).Copy Destination:=finalreport.Sheets("Data from BW").Columns(1)
+
+finalreport.Sheets("Data from BW").Range("C1:G1").Copy Destination:=rawdata.Sheets("Sheet 1").Range("C1:G1")
+rawdata.Sheets("Sheet 1").Columns("C:G").Copy Destination:=finalreport.Sheets("Data from BW").Columns("C:G")
+
+rawdata.Close
+
+'Updating EPs
+
+Dim monthnum As String, weekword As String
+
+Select Case month
+    Case "January"
+        monthnum = "01"
+    Case "February"
+        monthnum = "02"
+    Case "March"
+        monthnum = "03"
+    Case "April"
+        monthnum = "04"
+    Case "May"
+        monthnum = "05"
+    Case "June"
+        monthnum = "06"
+    Case "July"
+        monthnum = "07"
+    Case "August"
+        monthnum = "08"
+    Case "September"
+        monthnum = "09"
+    Case "October"
+        monthnum = "10"
+    Case "November"
+        monthnum = "11"
+    Case "December"
+        monthnum = "12"
+End Select
+
+Select Case weekthismonth
+    Case "1"
+        weekword = "1st"
+    Case "2"
+        weekword = "2nd"
+    Case "3"
+        weekword = "3rd"
+    Case "4"
+        weekword = "4th"
+    Case "5"
+        weekword = "5th"
+End Select
+
+Dim monthyear, weekyear
+
+monthyear = year & "/" & monthnum
+If weeknum < 10 Then
+    weekyear = year & "0" & weeknum
+Else
+    weekyear = year & weeknum
+End If
+
+finalreport.Sheets("EPs").Cells(3, 5).Value = monthyear
+finalreport.Sheets("EPs").Cells(4, 5).Value = weekyear
+
+If newmonth = True Then
+    finalreport.Sheets("EPs").Cells(3, 6).Value = "0"
+End If
+
+Dim cumulhrs As String
+cumulhrs = "= " & finalreport.Sheets("EPs").Cells(3, 6).Value & " + " & weekhours
+
+finalreport.Sheets("EPs").Cells(3, 6).Value = cumulhrs
+finalreport.Sheets("EPs").Cells(4, 6).Value = weekhours
+
+'Updating EP Chart
+
+'Change DEMO to whatever the new project is called
+finalreport.Sheets("EP Chart").ChartObjects("Chart 2").Chart.HasTitle = True
+finalreport.Sheets("EP Chart").ChartObjects("Chart 2").Chart.ChartTitle.Text = "DEMO Chart" & vbCr & month & " " & year & " - wk " & weekthismonth
+
+finalreport.Sheets("EP Chart").Cells(34, 3).Value = "*Current month actuals (" & month & ") thru " & weekword & " week."
+
+Dim xpos As Integer
+'Change DEMONUM based on the month spacings in the table
+xpos = CInt(monthnum) + DEMONUM
+
+'Make sure to check if these cell references are correct
+finalreport.Sheets("EP Chart").Cells(31, xpos).Value = finalreport.Sheets("EPs").Cells(31, 6).Value
+
+'Refreshing Report
+
+If refresh = True Then
+    Sheets("Report").PivotTables("PivotTable1").PivotCache.refresh
+End If
+
+finalreport.Sheets("EP Chart").Activate
+finalreport.Save
+
+End Sub
+
+'For labor reports that don't have headcount files
+'No longer being used now -- leaving here for future reference
+
+Sub ProcessReport_ICON(reportname As String, rawname As String, prevname As String, refresh As Boolean)
+
+Dim finalreport As Workbook, headcount As Workbook, prevreport As Workbook
+
+'Initializing new complete labor report
+
+Set prevreport = Workbooks.Open(prevname)
+
+prevreport.SaveCopyAs reportname
+
+Set finalreport = Workbooks.Open(reportname)
+
+prevreport.Close
+
+'Copying new raw data over
+
+Set rawdata = Workbooks.Open(rawname)
+
+rawdata.Sheets("Sheet 1").Rows("1:2").Delete
+
+finalreport.Sheets("Data from BW").Cells(1, 1).Copy Destination:=rawdata.Sheets("Sheet 1").Cells(1, 1)
+rawdata.Sheets("Sheet 1").Columns(1).Copy Destination:=finalreport.Sheets("Data from BW").Columns(1)
+
+finalreport.Sheets("Data from BW").Range("C1:G1").Copy Destination:=rawdata.Sheets("Sheet 1").Range("C1:G1")
+rawdata.Sheets("Sheet 1").Columns("C:G").Copy Destination:=finalreport.Sheets("Data from BW").Columns("C:G")
+
+rawdata.Close
+
+'Updating EPs
+
+Dim monthnum As String, weekword As String
+
+Select Case month
+    Case "January"
+        monthnum = "01"
+    Case "February"
+        monthnum = "02"
+    Case "March"
+        monthnum = "03"
+    Case "April"
+        monthnum = "04"
+    Case "May"
+        monthnum = "05"
+    Case "June"
+        monthnum = "06"
+    Case "July"
+        monthnum = "07"
+    Case "August"
+        monthnum = "08"
+    Case "September"
+        monthnum = "09"
+    Case "October"
+        monthnum = "10"
+    Case "November"
+        monthnum = "11"
+    Case "December"
+        monthnum = "12"
+End Select
+
+Select Case weekthismonth
+    Case "1"
+        weekword = "1st"
+    Case "2"
+        weekword = "2nd"
+    Case "3"
+        weekword = "3rd"
+    Case "4"
+        weekword = "4th"
+    Case "5"
+        weekword = "5th"
+End Select
+
+Dim monthyear, weekyear
+
+monthyear = year & "/" & monthnum
+If weeknum < 10 Then
+    weekyear = year & "0" & weeknum
+Else
+    weekyear = year & weeknum
+End If
+
+finalreport.Sheets("EPs").Cells(3, 5).Value = monthyear
+finalreport.Sheets("EPs").Cells(4, 5).Value = weekyear
+
+If newmonth = True Then
+    finalreport.Sheets("EPs").Cells(3, 6).Value = "0"
+End If
+
+Dim cumulhrs As String
+cumulhrs = "= " & finalreport.Sheets("EPs").Cells(3, 6).Value & " + " & weekhours
+
+finalreport.Sheets("EPs").Cells(3, 6).Value = cumulhrs
+finalreport.Sheets("EPs").Cells(4, 6).Value = weekhours
+
+'Updating EP Chart
+
+finalreport.Sheets("Hours Chart").ChartObjects("Chart 2").Chart.HasTitle = True
+finalreport.Sheets("Hours Chart").ChartObjects("Chart 2").Chart.ChartTitle.Text = "ICON Hours Chart" & vbCr & month & " " & year & " - wk " & weekthismonth
+
+finalreport.Sheets("Hours Chart").Cells(34, 3).Value = "*Current month actuals (" & month & ") thru " & weekword & " week."
+
+Dim xpos As Integer
+xpos = CInt(monthnum) + 3
+
+finalreport.Sheets("Hours Chart").Cells(31, xpos).Value = finalreport.Sheets("EPs").Cells(14, 5).Value
+
+'Refreshing Report
+
+If refresh = True Then
+    Sheets("Report").PivotTables("PivotTable2").PivotCache.refresh
+End If
+
+finalreport.Sheets("Hours Chart").Activate
+finalreport.Save
+
+End Sub
