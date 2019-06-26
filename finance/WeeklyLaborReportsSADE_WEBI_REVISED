@@ -1,0 +1,2193 @@
+'Makes the columns "temp", which refers to column letters orange.
+Function makeOrange(col As String) As Double
+    Dim Length As Integer
+    Dim temp As String
+    'Finds the length of the column names (ex: AP1 has length of 3)
+    Length = Len(col)
+    '(string length, number of letters grabbed from left side)
+    temp = Left(col, Length - 1)
+    Columns(temp).Select
+    Selection.Interior.Color = RGB(255, 204, 153)
+End Function
+
+'**************************************************************************UPDATE EVERY YEAR*************************************************************************************
+'EP Hours for every year of every week
+Function EPHOURS(max As Long) As Long
+    Dim weeknum As Long
+    'Grabs week number (last two digits on the right)
+    '(ex max: 201203 grabs 03)
+    weeknum = Right(max, 2)
+ 
+    'EP Hours for 2019 by week - edit every year
+    Select Case weeknum
+    'jan
+        Case "01"
+            EPHOURS = 0
+        Case "02"
+            EPHOURS = 26
+        Case "03"
+            EPHOURS = 62
+        Case "04"
+            EPHOURS = 106
+        Case "05"
+            EPHOURS = 142
+    'feb
+        Case "06"
+            EPHOURS = 44
+        Case "07"
+            EPHOURS = 80
+        Case "08"
+            EPHOURS = 124
+        Case "09"
+            EPHOURS = 160
+    'mar
+        Case "10"
+            EPHOURS = 44
+        Case "11"
+            EPHOURS = 80
+        Case "12"
+            EPHOURS = 124
+        Case "13"
+            EPHOURS = 160
+        Case "14"
+            EPHOURS = 204
+    'apr
+        Case "15"
+            EPHOURS = 36
+        Case "16"
+            EPHOURS = 80
+        Case "17"
+            EPHOURS = 116
+        Case "18"
+            EPHOURS = 156
+    'may
+        Case 19
+            EPHOURS = 40
+        Case 20
+            EPHOURS = 80
+        Case 21
+            EPHOURS = 120
+        Case 22
+            EPHOURS = 160
+    'jun
+        Case 23
+            EPHOURS = 31
+        Case 24
+            EPHOURS = 71
+        Case 25
+            EPHOURS = 111
+        Case 26
+            EPHOURS = 151
+        Case 27
+            EPHOURS = 191
+    'jul
+        Case 28
+            EPHOURS = 31
+        Case 29
+            EPHOURS = 71
+        Case 30
+            EPHOURS = 111
+        Case 31
+            EPHOURS = 151
+    'aug
+        Case 32
+            EPHOURS = 40
+        Case 33
+            EPHOURS = 80
+        Case 34
+            EPHOURS = 120
+        Case 35
+            EPHOURS = 160
+    'sep
+        Case 36
+            EPHOURS = 40
+        Case 37
+            EPHOURS = 71
+        Case 38
+            EPHOURS = 111
+        Case 39
+            EPHOURS = 151
+        Case 40
+            EPHOURS = 191
+    'oct
+        Case 41
+            EPHOURS = 40
+        Case 42
+            EPHOURS = 80
+        Case 43
+            EPHOURS = 120
+        Case 44
+            EPHOURS = 160
+    'nov
+        Case 45
+            EPHOURS = 40
+        Case 46
+            EPHOURS = 80
+        Case 47
+            EPHOURS = 120
+        Case 48
+            EPHOURS = 160
+    'dec
+        Case 49
+            EPHOURS = 31
+        Case 50
+            EPHOURS = 71
+        Case 51
+            EPHOURS = 111
+        Case 52
+            EPHOURS = 151
+    End Select
+End Function
+'Checks whether right 3 letters are CTD columns and returns true or false
+Function isCTD(col As String) As Boolean
+    Dim temp As String
+    temp = Right(col, 3)
+    If temp = "CTD" Then
+        isCTD = True
+    Else
+        isCTD = False
+    End If
+End Function
+'Transforms Y2K value to week_year format and then compares it to the headers that are in the week_year format on the top row
+'scroll = the headers on the top (ex: 03_2012)
+Function transform(Y2K As String, Scroll As String) As Boolean
+    Dim temp As String
+    'Puts the numbers in the format
+    temp = Right(Y2K, 2) & "_" & Left(Y2K, 4)
+    If temp = Scroll Then
+        transform = True
+    Else
+        transform = False
+    End If
+End Function
+
+'Names columns with letters from numbers (ex: 5 = E)
+'Uses Ascii numbers for characters
+Function ColumnLetter2(counter2 As Long) As String
+        Dim col As String
+        If counter2 < 26 Then
+            col = Chr(65 + counter2)
+        ElseIf counter2 < 52 Then
+            col = "A" & Chr(39 + counter2)
+        ElseIf counter2 < 78 Then
+            col = "B" & Chr(13 + counter2)
+        ElseIf counter2 < 104 Then
+            col = "C" & Chr(-13 + counter2)
+        ElseIf counter2 < 130 Then
+            col = "D" & Chr(-39 + counter2)
+        ElseIf counter2 < 156 Then
+            col = "E" & Chr(-65 + counter2)
+        ElseIf counter2 < 182 Then
+            col = "F" & Chr(-91 + counter2)
+        ElseIf counter2 < 208 Then
+            col = "G" & Chr(-117 + counter2)
+        ElseIf counter2 < 234 Then
+            col = "H" & Chr(-143 + counter2)
+        ElseIf counter2 < 260 Then
+            col = "I" & Chr(-169 + counter2)
+        ElseIf counter2 < 286 Then
+            col = "J" & Chr(-195 + counter2)
+        ElseIf counter2 < 312 Then
+            col = "K" & Chr(-221 + counter2)
+        ElseIf counter2 < 338 Then
+            col = "L" & Chr(-247 + counter2)
+        ElseIf counter2 < 364 Then
+            col = "M" & Chr(-273 + counter2)
+        ElseIf counter2 < 390 Then
+            col = "N" & Chr(-299 + counter2)
+        ElseIf counter2 < 416 Then
+            col = "O" & Chr(-325 + counter2)
+        ElseIf counter2 < 442 Then
+            col = "P" & Chr(-351 + counter2)
+        ElseIf counter2 < 468 Then
+            col = "Q" & Chr(-376 + counter2)
+        ElseIf counter2 < 494 Then
+            col = "R" & Chr(-402 + counter2)
+        ElseIf counter2 < 520 Then
+            col = "S" & Chr(-428 + counter2)
+        ElseIf counter2 < 546 Then
+            col = "T" & Chr(-454 + counter2)
+        ElseIf counter2 < 572 Then
+            col = "U" & Chr(-480 + counter2)
+        ElseIf counter2 < 598 Then
+            col = "V" & Chr(-506 + counter2)
+        ElseIf counter2 < 624 Then
+            col = "W" & Chr(-532 + counter2)
+        ElseIf counter2 < 650 Then
+            col = "X" & Chr(-558 + counter2)
+        ElseIf counter2 < 676 Then
+            col = "Y" & Chr(-584 + counter2)
+        Else
+            col = "Z" & Chr(-610 + counter2)
+        End If
+        ColumnLetter2 = col
+    End Function
+'Calls the function above it
+Function ColumnLetter(counter2 As Long) As String
+        Dim temp As String
+        temp = ColumnLetter2(counter2)
+        ColumnLetter = temp & "1"
+    End Function
+Sub WeeklyLaborReportsSADE_WEBI_REVISED()
+'
+' WeeklyLaborReportsSADE_FINAL Macro
+' Created by Brian Tam, Matt Miller, Ethan Hickman, and Joseph Feghhi
+'Last edited by Daniel Jin, 06/17/19
+'COPY OF ORIGINAL SADE FINAL MACRO BUT FOR WEBI USE
+
+    'Hides the macro process from showing on the screen (makes it run faster if false)
+    Application.ScreenUpdating = False
+    
+    'Delete top 6 rows (instead of 3)
+    
+    Range("A1:A6").Select
+    Selection.EntireRow.Delete
+    'Sorts and Filters the whole sheet by WBS number
+    ActiveWorkbook.Worksheets("Labor Hours").Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("Labor Hours").Sort.SortFields.Add Key:=Range("A1"), _
+        SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
+    With ActiveWorkbook.Worksheets("Labor Hours").Sort
+        .SetRange Range("A1:I50000")
+        .Header = xlNo
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+    
+    Sheets.Add
+    ActiveSheet.Name = "Macro1"
+    Worksheets("Labor Hours").Activate
+
+    'Reads and Assigns headers to each column
+    Range("A1").EntireRow.Insert
+    Range("A1").Value = "Wbs"
+    Range("B1").Value = "Wbs Desc"
+    Range("C1").Value = "Employee ID"
+    Range("D1").Value = "Employee Last Name, Initials"
+    Range("E1").Value = "Employee Last Name"
+    Range("F1").Value = "Process Pay Period"
+    Range("G1").Value = "Paid Hours"
+    'Delete the contents in column A of sheet Macro 1 and copy WBS Desc into there. Then delete WBS Desc from Labor Hours
+    Sheets("Macro1").Range("A:A").EntireColumn.Delete
+    Sheets("Macro1").Range("A:A").Value = Sheets("Labor Hours").Range("B:B").Value
+    Range("B:B").EntireColumn.Delete
+    
+    Dim counter As Long 'this is used to count how many rows of information there are
+    Dim counter2 As Long 'this is used to figure out which column we are on when scrolling across (refer to functions above)
+    Dim max As Long 'largest Y2K value (ex 201228)
+    Dim maxL As Long 'number of columns
+    Dim min As Long 'smallest Y2K value (ex 200703)
+   
+    Dim title As String 'what will be placed in row 1 of every column.  Typically in the form of 02_2012
+    Dim counterStr As String 'string form of counter.  Typically made by concatenating counter & " "
+    Dim temp As String 'string used for everything.  Typically for column names ie. A3
+    Dim tempI As String 'string used for everything. Typically for values in cells
+    Dim col As String 'string used to store the letter of a column (AD).  Occasionally used to store a cell (AD1)
+ 
+    'Captures everything this way
+    max = 0 'set max way below any possible max
+    min = 333333 'set min way above any possible min
+   
+    'Note: WBS, ID, NAME, LNAME, Y2K, HOURS
+    'Make WBS and ID column light gray
+    Range("A:A").Select
+    Selection.Interior.Color = RGB(224, 229, 232)
+    Range("B:B").Select
+    Selection.Interior.Color = RGB(224, 229, 232)
+    'Make header of WBS and ID's a darker gray
+    Range("A1:A1").Select
+    Selection.Interior.Color = RGB(192, 196, 199)
+    Range("B1:B1").Select
+    Selection.Interior.Color = RGB(192, 196, 199)
+    'Make NAME green
+    Columns("C:C").Select
+    Selection.Interior.ColorIndex = 35
+ 
+    'Delete the last name column because it is not needed
+    Range("D:D").Select
+    Selection.EntireColumn.Delete
+   
+    'No clue no clue.  Not sure if even necessary @_@.*************************************************************************
+    Cells.Select
+    Selection.NumberFormat = "_(* #,##0.0_);_(* (#,##0.0);_(* ""-""??_);_(@_)"
+    Range("E1").Select
+   
+   'lastRow stores the last row in the code.  The code under it determines the last row.
+    Dim LastRow As Integer
+    With ActiveSheet
+        LastRow = .Cells(.Rows.Count, "C").End(xlUp).Row 'Scrolls down to blank cells in column, then comes back up till first data point is hit
+    End With
+   
+    'Note: WBS, ID, NAME, Y2K, HOURS
+    'cycle through all the rows in order to find max and min of Y2K values (201203)
+    'this will be used in order to find the range of Y2K values
+    For counter = 2 To LastRow - 1
+        temp = "D" & counter
+        tempI = Range(temp).Value
+        If tempI > max & "" Then 'Turns into string
+             max = tempI + 0 'Turns back into integer
+        End If
+        If tempI < min & "" Then 'Turns into string
+            min = tempI + 0 'Turns back into integer
+        End If
+    Next counter
+   
+   'counter is now used to go from min to max (200704 -> 201230) for example
+    'counter2 is used to determine which column number you are on
+    '0->A, 1->B, 2->C, 3->D, 4->E, 5->F, 26->AA etc.
+    counter2 = 5
+    'This is the start of a massive for loop
+    For counter = min To max
+        'if you're at 53 then you finished your current year so you goto the next one
+        'if you're in 2008 there's a week 1 so you have to go back from week 02 to week 01
+        'NEEDS UPDATE IF THERE IS ANOTHER YEAR WITH WEEK 1 (add a 201#02 IF statement (# would make it a certain year ie 201502...))************************************************************************************************
+        If counter Mod 100 = 53 Then
+            counter = counter + 49
+            
+            If counter = 200802 Then
+                counter = counter - 1
+            End If
+            If counter = 201302 Then
+                counter = counter - 1
+            End If
+            If counter = 201402 Then
+                counter = counter - 1
+            End If
+            If counter = 201502 Then
+                counter = counter - 1
+            End If
+            If counter = 201602 Then
+                counter = counter - 1
+            End If
+            '***************************************************the IF statement would be added here.
+        End If
+        
+        'look at ColumnLetter at the top then make it a string
+        'counter 2 is never a string
+        col = ColumnLetter(counter2)
+        counterStr = counter & "" 'concatenate counter with "" to make it a string
+        'transform the Y2K value into title format (201203->03_2012)
+        title = Right(counterStr, 2) & "_" & Left(counterStr, 4)
+        'Assign the title to the header of the column and then color it gray
+         Range(col).Value = title
+         Range(col).Select
+         Selection.Interior.Color = RGB(224, 229, 232)
+        'increment counter2 everytime a new column is made
+         counter2 = counter2 + 1
+        
+        'go through every single year defining when CTD's occur
+        'THIS NEEDS TO BE UPDATED EVERY YEAR**************************************************************************************************************************************
+        'each one does the exact same thing
+        'when the counter gets to the right week, add the column
+        'then check which column you're on
+        'then add the title
+        'then make it orange
+        'then increment the counter2
+        
+        '2007
+        If counter = 200705 Then
+            col = ColumnLetter(counter2)
+            title = "Jan CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200709 Then
+            col = ColumnLetter(counter2)
+            title = "Feb CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200713 Then
+            col = ColumnLetter(counter2)
+            title = "Mar CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200718 Then
+            col = ColumnLetter(counter2)
+            title = "Apr CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200722 Then
+            col = ColumnLetter(counter2)
+            title = "May CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200726 Then
+            col = ColumnLetter(counter2)
+            title = "Jun CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200731 Then
+            col = ColumnLetter(counter2)
+            title = "Jul CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200735 Then
+            col = ColumnLetter(counter2)
+            title = "Aug CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200740 Then
+            col = ColumnLetter(counter2)
+            title = "Sep CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200744 Then
+            col = ColumnLetter(counter2)
+            title = "Oct CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200748 Then
+            col = ColumnLetter(counter2)
+            title = "Nov CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+       
+        '2008
+        If counter = 200804 Then
+            col = ColumnLetter(counter2)
+            title = "Jan CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200808 Then
+            col = ColumnLetter(counter2)
+            title = "Feb CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200813 Then
+            col = ColumnLetter(counter2)
+            title = "Mar CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200817 Then
+            col = ColumnLetter(counter2)
+            title = "Apr CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200821 Then
+            col = ColumnLetter(counter2)
+            title = "May CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200826 Then
+            col = ColumnLetter(counter2)
+            title = "Jun CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200830 Then
+            col = ColumnLetter(counter2)
+            title = "Jul CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200835 Then
+            col = ColumnLetter(counter2)
+            title = "Aug CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200839 Then
+            col = ColumnLetter(counter2)
+            title = "Sep CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200843 Then
+            col = ColumnLetter(counter2)
+            title = "Oct CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200848 Then
+            col = ColumnLetter(counter2)
+            title = "Nov CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+       
+        '2009
+        If counter = 200904 Then
+            col = ColumnLetter(counter2)
+            title = "Jan CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200908 Then
+            col = ColumnLetter(counter2)
+            title = "Feb CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200913 Then
+            col = ColumnLetter(counter2)
+            title = "Mar CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200917 Then
+            col = ColumnLetter(counter2)
+            title = "Apr CTD"
+           Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200922 Then
+            col = ColumnLetter(counter2)
+            title = "May CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200926 Then
+            col = ColumnLetter(counter2)
+            title = "Jun CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200930 Then
+            col = ColumnLetter(counter2)
+            title = "Jul CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200935 Then
+            col = ColumnLetter(counter2)
+            title = "Aug CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200939 Then
+            col = ColumnLetter(counter2)
+            title = "Sep CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200943 Then
+            col = ColumnLetter(counter2)
+            title = "Oct CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 200948 Then
+            col = ColumnLetter(counter2)
+            title = "Nov CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+       
+        '2010
+        If counter = 201005 Then
+            col = ColumnLetter(counter2)
+            title = "Jan CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201009 Then
+            col = ColumnLetter(counter2)
+            title = "Feb CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201013 Then
+            col = ColumnLetter(counter2)
+            title = "Mar CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201017 Then
+            col = ColumnLetter(counter2)
+            title = "Apr CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201022 Then
+            col = ColumnLetter(counter2)
+            title = "May CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201026 Then
+            col = ColumnLetter(counter2)
+            title = "Jun CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201030 Then
+            col = ColumnLetter(counter2)
+            title = "Jul CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201035 Then
+            col = ColumnLetter(counter2)
+            title = "Aug CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201039 Then
+            col = ColumnLetter(counter2)
+            title = "Sep CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201044 Then
+            col = ColumnLetter(counter2)
+            title = "Oct CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201048 Then
+            col = ColumnLetter(counter2)
+            title = "Nov CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+       
+        '2011
+        If counter = 201105 Then
+            col = ColumnLetter(counter2)
+            title = "Jan CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201109 Then
+            col = ColumnLetter(counter2)
+            title = "Feb CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201113 Then
+            col = ColumnLetter(counter2)
+            title = "Mar CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201117 Then
+            col = ColumnLetter(counter2)
+            title = "Apr CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201122 Then
+            col = ColumnLetter(counter2)
+            title = "May CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201126 Then
+            col = ColumnLetter(counter2)
+            title = "Jun CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201131 Then
+            col = ColumnLetter(counter2)
+            title = "Jul CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201135 Then
+            col = ColumnLetter(counter2)
+            title = "Aug CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201139 Then
+            col = ColumnLetter(counter2)
+            title = "Sep CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201144 Then
+            col = ColumnLetter(counter2)
+            title = "Oct CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201148 Then
+            col = ColumnLetter(counter2)
+            title = "Nov CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+       
+        '2012
+        If counter = 201205 Then
+            col = ColumnLetter(counter2)
+            title = "Jan CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201209 Then
+            col = ColumnLetter(counter2)
+            title = "Feb CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201213 Then
+            col = ColumnLetter(counter2)
+            title = "Mar CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201218 Then
+            col = ColumnLetter(counter2)
+            title = "Apr CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201222 Then
+            col = ColumnLetter(counter2)
+            title = "May CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201226 Then
+            col = ColumnLetter(counter2)
+            title = "Jun CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201231 Then
+            col = ColumnLetter(counter2)
+            title = "Jul CTD"
+           Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201235 Then
+            col = ColumnLetter(counter2)
+            title = "Aug CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201240 Then
+            col = ColumnLetter(counter2)
+            title = "Sep CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201244 Then
+            col = ColumnLetter(counter2)
+            title = "Oct CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201248 Then
+            col = ColumnLetter(counter2)
+            title = "Nov CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+             
+       '2013
+        If counter = 201304 Then
+            col = ColumnLetter(counter2)
+            title = "Jan CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201308 Then
+            col = ColumnLetter(counter2)
+            title = "Feb CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201313 Then
+            col = ColumnLetter(counter2)
+            title = "Mar CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201317 Then
+            col = ColumnLetter(counter2)
+            title = "Apr CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201321 Then
+            col = ColumnLetter(counter2)
+            title = "May CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201326 Then
+            col = ColumnLetter(counter2)
+            title = "Jun CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201330 Then
+            col = ColumnLetter(counter2)
+            title = "Jul CTD"
+           Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201334 Then
+            col = ColumnLetter(counter2)
+            title = "Aug CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201339 Then
+            col = ColumnLetter(counter2)
+            title = "Sep CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201343 Then
+            col = ColumnLetter(counter2)
+            title = "Oct CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201347 Then
+            col = ColumnLetter(counter2)
+            title = "Nov CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        
+        '2014
+        If counter = 201404 Then
+            col = ColumnLetter(counter2)
+            title = "Jan CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201408 Then
+            col = ColumnLetter(counter2)
+            title = "Feb CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201413 Then
+            col = ColumnLetter(counter2)
+            title = "Mar CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201417 Then
+            col = ColumnLetter(counter2)
+            title = "Apr CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201421 Then
+            col = ColumnLetter(counter2)
+            title = "May CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201426 Then
+            col = ColumnLetter(counter2)
+            title = "Jun CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201430 Then
+            col = ColumnLetter(counter2)
+            title = "Jul CTD"
+           Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201435 Then
+            col = ColumnLetter(counter2)
+            title = "Aug CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201439 Then
+            col = ColumnLetter(counter2)
+            title = "Sep CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201443 Then
+            col = ColumnLetter(counter2)
+            title = "Oct CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201448 Then
+            col = ColumnLetter(counter2)
+            title = "Nov CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        
+        '2015
+        If counter = 201504 Then
+            col = ColumnLetter(counter2)
+            title = "Jan CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201508 Then
+            col = ColumnLetter(counter2)
+            title = "Feb CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201513 Then
+            col = ColumnLetter(counter2)
+            title = "Mar CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201517 Then
+            col = ColumnLetter(counter2)
+            title = "Apr CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201522 Then
+            col = ColumnLetter(counter2)
+            title = "May CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201526 Then
+            col = ColumnLetter(counter2)
+            title = "Jun CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201530 Then
+            col = ColumnLetter(counter2)
+            title = "Jul CTD"
+           Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201535 Then
+            col = ColumnLetter(counter2)
+            title = "Aug CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201539 Then
+            col = ColumnLetter(counter2)
+            title = "Sep CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201543 Then
+            col = ColumnLetter(counter2)
+            title = "Oct CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201548 Then
+            col = ColumnLetter(counter2)
+            title = "Nov CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        
+       '2016
+        If counter = 201605 Then
+            col = ColumnLetter(counter2)
+            title = "Jan CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201609 Then
+            col = ColumnLetter(counter2)
+            title = "Feb CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201613 Then
+            col = ColumnLetter(counter2)
+            title = "Mar CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201617 Then
+            col = ColumnLetter(counter2)
+            title = "Apr CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201622 Then
+            col = ColumnLetter(counter2)
+            title = "May CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201626 Then
+            col = ColumnLetter(counter2)
+            title = "Jun CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201631 Then
+            col = ColumnLetter(counter2)
+            title = "Jul CTD"
+           Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201635 Then
+            col = ColumnLetter(counter2)
+            title = "Aug CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201639 Then
+            col = ColumnLetter(counter2)
+            title = "Sep CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201644 Then
+            col = ColumnLetter(counter2)
+            title = "Oct CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201648 Then
+            col = ColumnLetter(counter2)
+            title = "Nov CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        
+        '2017
+        If counter = 201705 Then
+            col = ColumnLetter(counter2)
+            title = "Jan CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201709 Then
+            col = ColumnLetter(counter2)
+            title = "Feb CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201713 Then
+            col = ColumnLetter(counter2)
+            title = "Mar CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201718 Then
+            col = ColumnLetter(counter2)
+            title = "Apr CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201722 Then
+            col = ColumnLetter(counter2)
+            title = "May CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201726 Then
+            col = ColumnLetter(counter2)
+            title = "Jun CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201731 Then
+            col = ColumnLetter(counter2)
+            title = "Jul CTD"
+           Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201735 Then
+            col = ColumnLetter(counter2)
+            title = "Aug CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201739 Then
+            col = ColumnLetter(counter2)
+            title = "Sep CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201744 Then
+            col = ColumnLetter(counter2)
+            title = "Oct CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201748 Then
+            col = ColumnLetter(counter2)
+            title = "Nov CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+
+ '2018
+        If counter = 201805 Then
+            col = ColumnLetter(counter2)
+            title = "Jan CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201809 Then
+            col = ColumnLetter(counter2)
+            title = "Feb CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201813 Then
+            col = ColumnLetter(counter2)
+            title = "Mar CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201818 Then
+            col = ColumnLetter(counter2)
+            title = "Apr CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201822 Then
+            col = ColumnLetter(counter2)
+            title = "May CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201826 Then
+            col = ColumnLetter(counter2)
+            title = "Jun CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201831 Then
+            col = ColumnLetter(counter2)
+            title = "Jul CTD"
+           Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201835 Then
+            col = ColumnLetter(counter2)
+            title = "Aug CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201840 Then
+            col = ColumnLetter(counter2)
+            title = "Sep CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201844 Then
+            col = ColumnLetter(counter2)
+            title = "Oct CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201848 Then
+            col = ColumnLetter(counter2)
+            title = "Nov CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        
+        '2019
+        If counter = 201905 Then
+            col = ColumnLetter(counter2)
+            title = "Jan CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201909 Then
+            col = ColumnLetter(counter2)
+            title = "Feb CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201914 Then
+            col = ColumnLetter(counter2)
+            title = "Mar CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201918 Then
+            col = ColumnLetter(counter2)
+            title = "Apr CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201922 Then
+            col = ColumnLetter(counter2)
+            title = "May CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201927 Then
+            col = ColumnLetter(counter2)
+            title = "Jun CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201931 Then
+            col = ColumnLetter(counter2)
+            title = "Jul CTD"
+           Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201935 Then
+            col = ColumnLetter(counter2)
+            title = "Aug CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201940 Then
+            col = ColumnLetter(counter2)
+            title = "Sep CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201944 Then
+            col = ColumnLetter(counter2)
+            title = "Oct CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        If counter = 201948 Then
+            col = ColumnLetter(counter2)
+            title = "Nov CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+        End If
+        
+        'Dec and New Year
+        If (counter Mod 100 = 52) Or (counter Mod 100 = 53) Then 'counter mod 100 = 52
+            Debug.Print "section entered"
+            Debug.Print CStr(counter)
+            col = ColumnLetter(counter2)
+            title = "Dec CTD"
+           Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+    
+            counterStr = Left(counter, 4)
+    
+            'If 2012 you have to add the EP's here because you do the years here
+            'NOTE THIS HAS TO BE UPDATED EVERY YEAR (next year put in 2020)*****************************************************************************************************
+            If counterStr = "2019" Then
+                Debug.Print "1"
+                col = ColumnLetter(counter2)
+                title = "Dec EP's"
+                Range(col).Select
+                Selection.Interior.Color = RGB(224, 229, 232)
+                Range(col).Value = title
+                counter2 = counter2 + 1
+            End If
+    
+                col = ColumnLetter(counter2)
+                title = Left(counterStr, 4) & " CTD"
+                Debug.Print "CTD 1"
+                Range(col).Value = title
+                makeOrange (col)
+                counter2 = counter2 + 1
+         End If
+            
+    Next counter 'End of for loop (increment counter, which are the Y2Ks)
+    
+    'If in the middle of a month, you need to go until you get to the end of a month
+    'Precaution is used to determine whether or not the CTD was already created
+    'If you're already on the week that a CTD was created on then only the EP will be created
+    'If you're not, you'll go through the first for loop just fine and precaution will become True
+    'As a result the CTD will be created and then the EP will be created after
+    'Note this doesn't get created in december because the EP was already created last time
+    'THIS NEEDS TO BE UPDATED EVERY YEAR*****************************************************************************************************************************************
+    Dim Precaution As Boolean
+    Precaution = False
+    For counter = max To 201953
+    'Stops the messing up at year ends (week 52)*****************************change 15s to 16s
+        If counter = 201953 Then
+            Exit For
+        End If
+        If counter = 201905 Then
+            If Precaution = True Then
+                col = ColumnLetter(counter2)
+                title = "Jan CTD"
+                Range(col).Value = title
+                makeOrange (col)
+                counter2 = counter2 + 1
+            End If
+           
+            col = ColumnLetter(counter2)
+            title = "Jan EP's"
+            Range(col).Value = title
+            Range(col).Select
+            Selection.Interior.Color = RGB(224, 229, 232)
+            counter2 = counter2 + 1
+            Exit For
+        End If
+        If counter = 201909 Then
+            If Precaution = True Then
+                col = ColumnLetter(counter2)
+                title = "Feb CTD"
+                Range(col).Value = title
+                makeOrange (col)
+                counter2 = counter2 + 1
+            End If
+            
+            col = ColumnLetter(counter2)
+            title = "Feb EP's"
+            Range(col).Value = title
+            Range(col).Select
+            Selection.Interior.Color = RGB(224, 229, 232)
+            counter2 = counter2 + 1
+            Exit For
+        End If
+        If counter = 201914 Then
+            If Precaution = True Then
+                col = ColumnLetter(counter2)
+                title = "Mar CTD"
+                Range(col).Value = title
+                makeOrange (col)
+                counter2 = counter2 + 1
+            End If
+            
+            col = ColumnLetter(counter2)
+            title = "Mar EP's"
+            Range(col).Value = title
+            Range(col).Select
+            Selection.Interior.Color = RGB(224, 229, 232)
+            counter2 = counter2 + 1
+            Exit For
+        End If
+        If counter = 201918 Then
+            If Precaution = True Then
+                col = ColumnLetter(counter2)
+                title = "Apr CTD"
+                Range(col).Value = title
+                makeOrange (col)
+                counter2 = counter2 + 1
+            End If
+            
+            col = ColumnLetter(counter2)
+            title = "Apr EP's"
+            Range(col).Value = title
+            Range(col).Select
+            Selection.Interior.Color = RGB(224, 229, 232)
+            counter2 = counter2 + 1
+            Exit For
+        End If
+        If counter = 201922 Then
+            If Precaution = True Then
+                col = ColumnLetter(counter2)
+                title = "May CTD"
+                Range(col).Value = title
+                makeOrange (col)
+                counter2 = counter2 + 1
+            End If
+            
+            col = ColumnLetter(counter2)
+            title = "May EP's"
+            Range(col).Value = title
+            Range(col).Select
+            Selection.Interior.Color = RGB(224, 229, 232)
+            counter2 = counter2 + 1
+            Exit For
+        End If
+        If counter = 201927 Then
+            If Precaution = True Then
+                col = ColumnLetter(counter2)
+                title = "Jun CTD"
+                Range(col).Value = title
+                makeOrange (col)
+                counter2 = counter2 + 1
+            End If
+           
+            col = ColumnLetter(counter2)
+            title = "Jun EP's"
+            Range(col).Value = title
+            Range(col).Select
+            Selection.Interior.Color = RGB(224, 229, 232)
+            counter2 = counter2 + 1
+            Exit For
+        End If
+        If counter = 201931 Then
+            If Precaution = True Then
+                col = ColumnLetter(counter2)
+                title = "Jul CTD"
+                Range(col).Value = title
+                makeOrange (col)
+                counter2 = counter2 + 1
+            End If
+            
+            col = ColumnLetter(counter2)
+            title = "Jul EP's"
+            Range(col).Value = title
+            Range(col).Select
+            Selection.Interior.Color = RGB(224, 229, 232)
+            counter2 = counter2 + 1
+            Exit For
+        End If
+        If counter = 201935 Then '*********************************35
+            If Precaution = True Then
+                col = ColumnLetter(counter2)
+                title = "Aug CTD"
+                Range(col).Value = title
+                makeOrange (col)
+                counter2 = counter2 + 1
+            End If
+            
+            col = ColumnLetter(counter2)
+            title = "Aug EP's"
+            Range(col).Value = title
+            Range(col).Select
+            Selection.Interior.Color = RGB(224, 229, 232)
+            counter2 = counter2 + 1
+            Exit For
+        End If
+        If counter = 201940 Then
+            If Precaution = True Then
+                col = ColumnLetter(counter2)
+                title = "Sep CTD"
+                Range(col).Value = title
+                makeOrange (col)
+                counter2 = counter2 + 1
+            End If
+            
+            col = ColumnLetter(counter2)
+            title = "Sep EP's"
+            Range(col).Value = title
+            Range(col).Select
+            Selection.Interior.Color = RGB(224, 229, 232)
+            counter2 = counter2 + 1
+            Exit For
+        End If
+        If counter = 201944 Then
+            If Precaution = True Then
+                col = ColumnLetter(counter2)
+                title = "Oct CTD"
+                Range(col).Value = title
+                makeOrange (col)
+                counter2 = counter2 + 1
+            End If
+            
+            col = ColumnLetter(counter2)
+            title = "Oct EP's"
+            Range(col).Value = title
+            Range(col).Select
+            Selection.Interior.Color = RGB(224, 229, 232)
+            counter2 = counter2 + 1
+            Exit For
+        End If
+        If counter = 201948 Then '**********************************48
+            If Precaution = True Then
+                col = ColumnLetter(counter2)
+                title = "Nov CTD"
+                Range(col).Value = title
+                makeOrange (col)
+                counter2 = counter2 + 1
+            End If
+            
+            col = ColumnLetter(counter2)
+            title = "Nov EP's"
+            Range(col).Value = title
+            Range(col).Select
+            Selection.Interior.Color = RGB(224, 229, 232)
+            counter2 = counter2 + 1
+            Exit For
+        End If
+        
+        If max = 201952 Then
+            Exit For
+        End If
+        
+        If counter Mod 100 = 52 Then '************52
+            Debug.Print CStr(counter)
+            Debug.Print "another section"
+            
+            col = ColumnLetter(counter2)
+            title = "Dec CTD"
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+  
+            col = ColumnLetter(counter2)
+            title = "Dec EP's"
+            Range(col).Value = title
+            Range(col).Select
+            Selection.Interior.Color = RGB(224, 229, 232)
+            counter2 = counter2 + 1
+  
+            col = ColumnLetter(counter2)
+            title = Left(counterStr, 4) & " CTD"
+            Debug.Print "CTD 2"
+            
+            Range(col).Value = title
+            makeOrange (col)
+            counter2 = counter2 + 1
+            Exit For
+         End If
+        
+        Precaution = True
+    Next counter
+   
+   'If it's the 52nd week you already created the year end.  Otherwise you need to create it here (comment out in december?)
+    If counter Mod 100 < 53 Then                            'if problems happen, check here maybe****************** NEWLY COMMENTED
+        col = ColumnLetter(counter2)
+        title = Left(counterStr, 4) & " CTD"
+        Debug.Print "CTD 3"
+        Range(col).Value = title
+        makeOrange (col)
+        counter2 = counter2 + 1
+    End If
+    
+    'Note counter2 will be 4 higher than it should because you increment it at end of every new column, Year total, EP, and last CTD total
+
+    maxL = counter2 - 4 'Last data column
+    'PLEASE EDIT LATER
+    'ISSUE GOING PAST COLUMN IV
+    
+    
+    'The overall result column is now generated at the end of everything else
+    Debug.Print ("counter: " & counter)
+    Debug.Print ("counter2: " & counter2)
+    
+    
+    col = ColumnLetter(counter2)
+    title = "Overall Result"
+    Debug.Print ("Col: " & col)
+   
+
+    Range(col).Value = title
+    counter2 = counter2 + 1
+    Dim Length As Long 'used to keep track of string lengths
+    Length = Len(col)
+    col = Left(col, Length - 1)
+    Debug.Print ("col:" & col)
+    Columns(col).Select
+    Selection.Interior.Color = RGB(255, 255, 153)
+   
+    'So now begins the double for loop process
+    'The larger loop keeps track of where you are
+    'while the lower loop checks each row under you
+    'if same project and employee add the work hours in the appropriate column of the true row
+    'then delete the row
+    Dim trueRow As Long 'larger loop keeps track of where you actually are
+    Dim Row As Long 'inner loop that scrolls down
+    Dim Scroll As Long 'goes across headers and is used to find where to place work hours
+    Dim check As Long 'you need a way to keep track of if this is the first time you hit a name with a given WBS ID
+    
+    Dim tempJ As String 'store WBS values of each row to compare to true row WBS values
+    Dim currentPerson As String 'keep track of which person is in the true row
+    Dim tempPerson As String 'which person is in the current row
+    Dim currentProject As String 'keep track of which WBS is in the true row
+    Dim Y2K As String 'stores the Y2K value of the row you're on
+   
+    'Figure out what the last row is again
+    With ActiveSheet
+        LastRow = .Cells(.Rows.Count, "C").End(xlUp).Row
+    End With
+    
+    'Figure out which WBS you're starting on
+    currentProject = Range("A2").Value
+    
+    'determine the last column....why do i do maxL if i have this...oh well!
+    With ActiveSheet
+        Dim lastCol As Long
+        lastCol = .Cells(1, .Columns.Count).End(xlToLeft).Column
+    End With
+   
+   'temp is used for cell names as in AB1
+   'tempI stores project values (WBS)
+   
+   'Now begin going through the rows starting with the trueRow
+    For trueRow = 2 To LastRow + 9 '********************Must be adjusted accordingly if given a new project ID(ex: lastrow + number of DIFFERENT charge numbers)*****************
+        'tempI stores the temporary WBS value
+        temp = "A" & trueRow
+        tempI = Range(temp).Value
+       
+        'Note: WBS, ID, NAME, Y2K, HOURS
+        'store the current person value (use the ID's)
+        temp = "B" & trueRow
+        currentPerson = Range(temp).Value
+        check = 0 'set the check to false if you're on a new row
+        
+        'since WBS are sorted if you changed WBS it would be larger in value
+        If tempI > currentProject Then
+            'add a new row and make it yellow
+            'increment the true row since theres nothing in this new blank row
+            'set the current WBS to the new value
+            Range(temp).EntireRow.Insert
+            Sheets("Macro1").Range(temp).EntireRow.Insert
+            Range(temp).EntireRow.Select
+            Selection.Interior.Color = RGB(255, 255, 153)
+            trueRow = trueRow + 1
+            currentProject = tempI
+            'reset the lastRow value
+            With ActiveSheet
+                LastRow = .Cells(.Rows.Count, "C").End(xlUp).Row
+            End With
+        End If
+       
+        'Cycle through all the rows under the true Row
+        For Row = trueRow To LastRow
+            'Note: WBS, ID, NAME, Y2K, HOURS
+            temp = "D" & Row
+            Y2K = Range(temp).Value 'grab the Y2K value of the current row
+            temp = "B" & Row
+            tempPerson = Range(temp).Value 'grab the person name of the current row
+            temp = "A" & Row
+            tempJ = Range(temp).Value 'grab the WBS of the current row
+           
+            'if the project changes stop going down since you won't find anything under this
+            If tempJ > currentProject Then
+                Exit For
+            End If
+           
+            'if people match up then contine
+            If tempPerson = currentPerson Then
+                'Note: WBS, ID, NAME, Y2K, HOURS
+                'go across the columns and try to match the Y2K value to the header
+                For Scroll = 5 To lastCol
+                    col = ColumnLetter(Scroll)
+                    tempI = Range(col).Value
+                   
+                    'look at transform function above.  tries to match the Y2K value with the header value
+                    If transform(Y2K, tempI) Then
+                        'if they match place the work hours in that colum in the true row
+                        col = ColumnLetter2(Scroll)
+                        temp = col & trueRow
+                        tempI = "E" & Row
+                        Range(temp).Value = Range(tempI).Value
+                        Range(tempI).Select
+                        'if not the first time this project+person are chosen delete the row
+                        If check > 0 Then
+                            Selection.EntireRow.Delete
+                            tempI = "A" & Row
+                            Sheets("Macro1").Range(tempI).Delete
+                            Row = Row - 1
+                            'redefine last row
+                            With ActiveSheet
+                                LastRow = .Cells(.Rows.Count, "C").End(xlUp).Row
+                            End With
+                        End If
+                        'if it happens even once then you can start deleting afterwards
+                        check = check + 1
+                        Exit For
+                    End If
+                   
+                Next Scroll
+            End If
+           
+        Next Row
+       
+    Next trueRow
+    
+    'Add 2 rows at the bottom for the last subtotal and the overall total rows
+    temp = "B" & LastRow + 1
+    Range(temp).EntireRow.Insert
+    Range(temp).EntireRow.Select
+    'color them yellow :D
+    Selection.Interior.Color = RGB(255, 255, 153)
+    Range(temp).EntireRow.Insert
+    Range(temp).EntireRow.Select
+    Selection.Interior.Color = RGB(255, 255, 153)
+   
+   'now you go across everything in order to define subtotals
+    Dim firstCol As Long 'first col is where to start the subtotal from
+    Dim lastRow2 As Long 'for when doing vertical subtotals you need the row above what youre on
+    Dim firstYear As Long 'for year subtotals NOTE: this really should say week >_>"
+    Dim firstRow As Long 'it's used in order to store the first row of a vertical subtotal
+    
+    Dim firstSide As String 'first side of a subtotal
+    Dim lastSide As String 'column before the subtotals
+   
+    firstCol = 5 'first column with values
+    'reset last row
+    With ActiveSheet
+        LastRow = .Cells(.Rows.Count, "C").End(xlUp).Row
+    End With
+    'because you added those 2 blank subtotal rows
+    LastRow = LastRow + 2
+    firstYear = 5
+    'reset first year
+    Dim maxL2 As Long 'because you should never mess with maxL you have maxL2 to mess with :D
+   maxL2 = maxL
+   'CTD'S/Totals
+    For Scroll = 5 To maxL2 + 1
+        'check if dealing with a CTD
+        col = ColumnLetter(Scroll)
+        title = Range(col).Value
+        If isCTD(title) Then
+            Length = Len(title)
+            'check if a year CTD or month
+            If Length > 7 Then
+                    For Row = 2 To LastRow
+                    'if year take subtotals from start of year to end of year
+                    'you have to make a subtotal for every row
+                    col = ColumnLetter2(firstYear)
+                    firstSide = col & Row
+                   
+                    lastCol = Scroll - 1 'Gives last column before CTD
+                    col = ColumnLetter2(lastCol)
+                    lastSide = col & Row
+   
+                    col = ColumnLetter2(Scroll)
+                    temp = col & Row
+                    'divide by 2 for month subtotals + week subtotals
+                    Range(temp).Formula = "=SUM(" & firstSide & ":" & lastSide & ")/2"
+                   
+                   'note for the final row your subtotal is vertical instead of horizontal
+                   'uhm you could go horizontal but i feel vertical is better for error cases
+                   'also variety is the spice of life or something...
+                    If Row = LastRow Then
+                        col = ColumnLetter2(Scroll)
+                        temp = col & LastRow
+                        firstSide = col & "2"
+                        lastRow2 = Row - 1
+                        lastSide = col & lastRow2
+                        'divide by 2 for double counting subtotals + people subtotals
+                        Range(temp).Formula = "=SUM(" & firstSide & ":" & lastSide & ")/2"
+                        Range(temp).Select
+                        'because they're supposed to be yellow!
+                        Selection.Interior.Color = RGB(255, 204, 153)
+                        
+                        'group everything from first side to last side
+                        col = ColumnLetter2(firstYear)
+                        firstSide = col & LastRow
+                        'note column BEFORE where you're at
+                        col = ColumnLetter2(Scroll - 1)
+                        temp = col & LastRow
+                        Range(temp, firstSide).Select
+                        Selection.Columns.Group
+                        'set start of first year to be next column aka start of next year
+                        firstYear = Scroll + 1
+                    End If
+                   
+                Next Row
+                
+            Else
+                'if month CTD
+                For Row = 2 To LastRow
+                    'same as before but smaller range just since last end of CTD
+                    col = ColumnLetter2(firstCol)
+                    firstSide = col & Row
+                   
+                    lastCol = Scroll - 1
+                    col = ColumnLetter2(lastCol)
+                    lastSide = col & Row
+   
+                    col = ColumnLetter2(Scroll)
+                    temp = col & Row
+                    Range(temp).Formula = "=SUM(" & firstSide & ":" & lastSide & ")"
+                   
+                    If Row = LastRow Then
+                        'vertical sums for final row again
+                        col = ColumnLetter2(Scroll)
+                        temp = col & LastRow
+                        firstSide = col & "2"
+                        lastRow2 = Row - 1
+                        lastSide = col & lastRow2
+                        'divide 2 for each persons subtotal and then each projects subtotal leading to double counting
+                        Range(temp).Formula = "=SUM(" & firstSide & ":" & lastSide & ")/2"
+                        Range(temp).Select
+                        Selection.Interior.Color = RGB(255, 204, 153)
+                    End If
+                   
+                Next Row
+            'group the columns between first column and the current month
+            'note you have to choose the column BEFORE where you're at
+            col = ColumnLetter2(firstCol)
+            firstSide = col & LastRow
+            col = ColumnLetter2(Scroll - 1)
+            temp = col & LastRow
+            Range(temp, firstSide).Select
+            Selection.Columns.Group
+
+            End If
+            'regardless of year or month CTD set the first month CTD column to be column after
+            firstCol = Scroll + 1
+        Else
+            'now if not a CTD you just do a vertical subtotal for every project for that week
+            'reset firstRow to first value every new section
+            firstRow = 2
+           'while going down the rows check the projects
+            For Row = 2 To LastRow
+                temp = "A" & Row
+                tempJ = Range(temp).Value
+               
+               'if blank project then you're at a subtotal line
+               'so sum everything above it
+                If tempJ = "" Then
+                    col = ColumnLetter2(Scroll)
+                    temp = col & Row
+                    firstSide = col & firstRow
+                    lastRow2 = Row - 1
+                    lastSide = col & lastRow2
+                    Range(temp).Formula = "=SUM(" & firstSide & ":" & lastSide & ")"
+                    'note first row is defined as first row for that subtotal
+                    firstRow = Row + 1
+                End If
+               
+                If Row = LastRow Then
+                    'if last row sum everything from start to finish then divide by 2 because you count twice for week and subtotals
+                    col = ColumnLetter2(Scroll)
+                    temp = col & LastRow
+                    firstSide = col & "2"
+                    lastRow2 = Row - 1
+                    lastSide = col & lastRow2
+                    'divide by 2 because of each value is counted once and then subtotals doubles it
+                    Range(temp).Formula = "=SUM(" & firstSide & ":" & lastSide & ")/2"
+                End If
+            Next Row
+        End If
+       
+    Next Scroll
+   
+   'EP's
+    Dim EP As Long
+    'tells you what the EP hours are so far this month
+    EP = EPHOURS(max)
+    'Note maxL gives you the column before the final CTD...there's no real good reason for this but this works >_>"
+    For Row = 2 To LastRow
+        'this gives you the EP column
+        col = ColumnLetter2(maxL + 2)
+        temp = col & Row
+        'this gives you the final CTD column
+        col = ColumnLetter2(maxL + 1)
+        firstSide = col & Row
+       
+        Range(temp).Formula = "=" & firstSide & "/" & EP
+       
+    Next Row
+   'Final Year CTD
+   'essentially because when you went across the scroll it stopped at the last CTD
+   'as a result you need to do the final year sum separately
+   'notice it's the same as the other year code so i'll skip commenting
+    For Row = 2 To LastRow
+                   
+        col = ColumnLetter2(firstYear)
+        firstSide = col & Row
+       
+        lastCol = Scroll - 1
+        col = ColumnLetter2(lastCol)
+        lastSide = col & Row
+       
+        col = ColumnLetter2(maxL + 3)
+        temp = col & Row
+        Range(temp).Formula = "=SUM(" & firstSide & ":" & lastSide & ")/2"
+       
+        If Row = LastRow Then
+            col = ColumnLetter2(maxL + 3)
+            temp = col & LastRow
+            firstSide = col & "2"
+            lastRow2 = Row - 1
+            lastSide = col & lastRow2
+            Range(temp).Formula = "=SUM(" & firstSide & ":" & lastSide & ")/2"
+            Range(temp).Select
+            Selection.Interior.Color = RGB(255, 204, 153)
+        End If
+   
+    Next Row
+    
+    'group everytihng in the last column
+    col = ColumnLetter2(firstYear)
+    firstSide = col & LastRow
+    col = ColumnLetter2(Scroll)
+    temp = col & LastRow
+    Range(temp, firstSide).Select
+    Selection.Columns.Group
+    
+    'Overall Results
+    'essentially you're summing everything from start to finish
+    'same as all the others so i won't comment much and this is getting tiring x.x
+    For Row = 2 To LastRow
+                   
+        col = ColumnLetter2(5)
+        firstSide = col & Row
+       
+        lastCol = Scroll - 1
+        col = ColumnLetter2(lastCol)
+        lastSide = col & Row
+       
+        'note +4 gives you overall results
+        col = ColumnLetter2(maxL + 4)
+        temp = col & Row
+        'note +3 gives you the current year totals that you have to add on at the end
+        col = ColumnLetter2(maxL + 3)
+        tempI = col & Row
+        'NOTE: Divide by 3! every week value+every month subtotal+every year total thus triple counting!
+        Range(temp).Formula = "=(SUM(" & firstSide & ":" & lastSide & ")+" & tempI & ")/3"
+       
+       'for the bottom it's a vertical sum again so you only need to divide by 2
+        If Row = LastRow Then
+            col = ColumnLetter2(maxL + 4)
+            temp = col & LastRow
+            firstSide = col & "2"
+            lastRow2 = Row - 1
+            lastSide = col & lastRow2
+            Range(temp).Formula = "=SUM(" & firstSide & ":" & lastSide & ")/2"
+        End If
+   
+    Next Row
+    
+    'Clear Blanks
+    'so we go backwards to avoid confusing columns
+    'yes this actually does go backwards...
+    For Scroll = 0 To maxL - 5
+        'look starts at maxL and goes to 5! it's backwards!
+        'grab the title
+        col = ColumnLetter(maxL - Scroll)
+        title = Range(col).Value
+        'grab the bottom value
+        col = ColumnLetter2(maxL - Scroll)
+        temp = col & LastRow
+        counterStr = Range(temp).Value
+        
+        'if it's 0 then the column has no data in it
+        If counterStr = 0 Then
+            
+            'if it's a ctd we just define everything to be -'s and clear the formulas
+            If isCTD(title) Then
+                For Row = 2 To LastRow
+                    temp = col & Row
+                    Range(temp).Formula = ""
+                    Range(temp).Value = "-"
+                Next Row
+            Else
+                'if it's not a CTD we just delete it :D
+                Columns(col).Select
+                Selection.EntireColumn.Delete
+                maxL2 = maxL2 - 1
+            End If
+            
+        End If
+    Next Scroll
+    
+    'Note:WBS, ID, Name, Y2K, HOURS
+    Range("D:D").Select
+    Selection.EntireColumn.Delete
+    Range("D:D").Select
+    Selection.EntireColumn.Delete
+    Range("B1").Select
+    Selection.EntireColumn.Insert
+    Sheets("Labor Hours").Range("B:B").Value = Sheets("Macro1").Range("A:A").Value
+    'Freeze the information panes in place for easy reference
+    Range("E2").Select
+    ActiveWindow.FreezePanes = True
+    'Add the filters to WBS, WBS Desc, ID, Name
+    Range("A1:D1").Select
+    Selection.AutoFilter
+    'Make everything in columns A thru D bold and centered :D
+    Range("A:D").Select
+    Selection.Font.Bold = True
+    Selection.HorizontalAlignment = xlCenter
+    Selection.Font.Size = 10
+   
+   'All that random bold line stuff/formatting...
+    col = ColumnLetter2(maxL2 + 3)
+    temp = col & LastRow
+    Range("A1:" & temp).Select
+    Selection.ColumnWidth = 10
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    
+    'make first two super wide :D
+    Range("A1:D1").ColumnWidth = 40
+    'make the overall results bigger
+    Range(temp).ColumnWidth = 15
+    'and select A1 AND IM DONE YES FINALLY FINALLY
+    'Hide grouped columns
+    ActiveSheet.Outline.ShowLevels RowLevels:=0, ColumnLevels:=1
+    Range("A1").Select
+    
+    Debug.Print "Macro complete"
+    
+End Sub
