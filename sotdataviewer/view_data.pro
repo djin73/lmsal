@@ -1,4 +1,5 @@
 
+
 ;Enter dates/times in the form 'DD-Mon-YYYYTHH:MM:SS' or 'YY/MM/DD, HH:MM:SS.SSS'
 ;G Band 2048 x 1024 (for some reason 1024 x 512 returns no results)
 ;mode = G band 4305
@@ -33,9 +34,48 @@ pro view_data, t0, t1, mode, naxis1, naxis2
      
      read_sot, files, index, data
 
-     vidtitle = 'SEQUENCE '+strtrim(i, 2) + ':   ' +sothcr[i].goal+ '   '+ sothcr[i].starttime + ' to ' + sothcr[i].stoptime
-     movie_player, data, files, title=vidtitle, xsize=naxis1, ysize=naxis2
+     origdata = data
+     ;implement option for viewing original data
 
+     
+                               
+
+      ;co-registration
+      ;look at xcen and  ycen and shift to match first frame
+     for j = 1, N_elements(index) - 1 do begin
+        xshift = (index[j].xcen - index[0].xcen) / index[j].cdelt1
+        yshift = (index[j].ycen - index[0].ycen) / index[j].cdelt2
+;        help, xshift, yshift
+        xshift = long(xshift+0.5) ;round to nearest integer
+        yshift = long(yshift+0.5)
+;        help, xshift, yshift
+
+        if j eq (N_elements(index)-1) then begin
+           data = [ [[data[*, *, 0:(j-1)]]], [[shift(data[*,*,j], xshift, yshift)]] ]
+        endif else begin
+           data = [ [[data[*, *, 0:(j-1)]]], [[shift(data[*,*,j], xshift, yshift)]], [[data[*,*, (j+1):((size(data))[3]-1)]]] ]
+        endelse
+        
+        
+     endfor
+     print, 'CO-REGISTRATION FOR SEQUENCE ', strtrim(i, 2), ' COMPLETE.'
+     
+
+     vidtitle = 'SEQUENCE '+strtrim(i, 2) + ':   ' +sothcr[i].goal+ '   '+ sothcr[i].starttime + ' to ' + sothcr[i].stoptime
+     vidtitle2 = vidtitle + ' (NO CO-REGISTRATION)'
+     
+     movie_player, data, files, index, title=vidtitle, xsize=naxis1, ysize=naxis2
+;     movie_player, origdata, files, index, title=vidtitle2, xsize = naxis1, ysize = naxis2
+     
+
+     save = ''
+     read, save, prompt='Record and save changes to FITS headers? [y/n]'
+     if save eq 'n' then begin
+       
+     endif else begin
+        mwritefits, index, origdata, outfile=files, outdir='/Users/jin/Desktop/testpath'
+     endelse
+     
      a = ''
      read, a, prompt='PRESS ENTER TO CONTINUE TO NEXT SEQUENCE: '
      
@@ -48,7 +88,7 @@ end
 ;data = data cube
 ;filename = name of file to save stuff to
 ;newfile = 'y' or 'n'
-function shift_tool, files, data, shiftframe, filename, newfile
+function shift_tool, files, data, index, shiftframe, filename, newfile
 
   orig = data
   shiftframe = uint(shiftframe)
@@ -87,19 +127,39 @@ function shift_tool, files, data, shiftframe, filename, newfile
      
      case a of
         'DOWN': begin
-           data = [ [[data[*, *, 0:startframe]]], [[shift(data[*,*,shiftframe], 0, -1)]], [[data[*,*, (startframe+2):((size(data))[3]-1)]]] ]
+           if shiftframe eq (N_elements(files) - 1) then begin
+              data = [ [[data[*, *, 0:startframe]]], [[shift(data[*,*,shiftframe], 0, -1)]] ]
+           endif else begin
+              data = [ [[data[*, *, 0:startframe]]], [[shift(data[*,*,shiftframe], 0, -1)]], [[data[*,*, (startframe+2):((size(data))[3]-1)]]] ]
+           endelse
+          
            yshift--
         end
         'UP': begin
-           data = [ [[data[*, *, 0:startframe]]], [[shift(data[*,*,shiftframe], 0, 1)]], [[data[*,*, (startframe+2):((size(data))[3]-1)]]] ]
+           if shiftframe eq (N_elements(files) - 1) then begin
+              data = [ [[data[*, *, 0:startframe]]], [[shift(data[*,*,shiftframe], 0, 1)]] ]
+           endif else begin
+              data = [ [[data[*, *, 0:startframe]]], [[shift(data[*,*,shiftframe], 0, 1)]], [[data[*,*, (startframe+2):((size(data))[3]-1)]]] ]
+           endelse
+           
            yshift++
         end
         'LEFT': begin
-           data = [ [[data[*, *, 0:startframe]]], [[shift(data[*,*,shiftframe], -1, 0)]], [[data[*,*, (startframe+2):((size(data))[3]-1)]]] ]
+           if shiftframe eq (N_elements(files) - 1) then begin
+              data = [ [[data[*, *, 0:startframe]]], [[shift(data[*,*,shiftframe], -1, 0)]] ]
+           endif else begin
+              data = [ [[data[*, *, 0:startframe]]], [[shift(data[*,*,shiftframe], -1, 0)]], [[data[*,*, (startframe+2):((size(data))[3]-1)]]] ]
+           endelse
+           
            xshift--
         end
         'RIGHT': begin
-           data = [ [[data[*, *, 0:startframe]]], [[shift(data[*,*,shiftframe], 1, 0)]], [[data[*,*, (startframe+2):((size(data))[3]-1)]]] ]
+           if shiftframe eq (N_elements(files) - 1) then begin
+              data = [ [[data[*, *, 0:startframe]]], [[shift(data[*,*,shiftframe], 1, 0)]] ]
+           endif else begin
+              data = [ [[data[*, *, 0:startframe]]], [[shift(data[*,*,shiftframe], 1, 0)]], [[data[*,*, (startframe+2):((size(data))[3]-1)]]] ]
+           endelse
+           
            xshift++
         end
 
@@ -138,8 +198,12 @@ function shift_tool, files, data, shiftframe, filename, newfile
   print, 'applied to frame ', strtrim(shiftframe, 2)
   print, 'Filename: ', files[shiftframe]
   print, ''
+
+  help, index
+  print, index.xcen
+  print, index.ycen
   
-  read, save, prompt='Save changes and record to file? [y/n]: '
+  read, save, prompt='Record and save changes to FITS header? [y/n]: '
 
 
   if save eq 'y' then begin
@@ -152,10 +216,15 @@ function shift_tool, files, data, shiftframe, filename, newfile
         openu, 1, filename, /APPEND
      endelse
      
-     printf, 1, files[shiftframe]
-     printf, 1, 'xshift: ', strtrim(xshift, 2)
-     printf, 1, 'yshift: ', strtrim(yshift, 2)
-     printf, 1, ''
+     str = files[shiftframe]
+
+     
+     index[shiftframe].xcen = index[shiftframe].xcen + xshift*index[shiftframe].cdelt1
+     index[shiftframe].ycen = index[shiftframe].ycen + yshift*index[shiftframe].cdelt2
+
+     
+     printf, 1, systime(), ' ', strmid(str, str.lastindexof('/')+1,str.strlen()-str.lastindexof('/')),' xshift:', strtrim(xshift, 2),' yshift:', strtrim(yshift, 2)
+;     printf, 1, ''
      close, 1
      print, 'SHIFT RECORDED TO FILE: ', filename
      return, data
