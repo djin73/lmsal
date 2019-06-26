@@ -214,6 +214,9 @@ pro xstepper_t_event, event
 ;   27-feb-1997 - Change from backreg to timer (Version 5 requiement)
 ;
 @xstepper.common
+
+
+  
 widget_control,event.top,get_uvalue=top_struct
 
 if minprog then begin
@@ -246,6 +249,7 @@ pro xstepper_event, event
 ;   Common Blocks:
 ;      sda_draw_private
 ;      xstepper_blk
+;      index_blk
 ;
 ;   History - 30-april-92 (see xtepper.pro documentation)
 ;	      19-oct-92   (fixed IMG->SS bug)
@@ -262,6 +266,8 @@ widget_control,event.top,get_uvalue=top_struct
 common	sda_draw_private,utility 	; zoom window widget
 @xstepper.common
 
+common index_blk, index
+;help, index
 ;help, xstep_str
 menubuts=get_wvalue(xstep_str.menubuts)
 freeze=xstep_str.menubuts(where(menubuts eq 'Freeze'))
@@ -415,10 +421,10 @@ endcase
          
          case dispopt of
             2: begin
-               scube = shift_tool(sinfo, scube, pixpnt, fn, new)
+               scube = shift_tool(sinfo, scube, index, pixpnt, fn, new)
             endcase
             else: begin
-               scube = shift_tool(sinfo, scube, current, fn, new)
+               scube = shift_tool(sinfo, scube, index, current, fn, new)
             endcase
         endcase
       endcase
@@ -714,7 +720,7 @@ endcase
 widget_control, event.top, set_uvalue=top_struct, bad_id=destroyed
 return
 end
-pro movie_player, cube, info, xsize=xsize, ysize=ysize , labels=labels, $
+pro movie_player, cube, info, ind, xsize=xsize, ysize=ysize , labels=labels, $
 	title=title , interp=interp, noscale=noscale,	$
         info_array=info_array, subscripts=subscripts, start=start, $
 	ssout=ssout
@@ -798,6 +804,7 @@ pro movie_player, cube, info, xsize=xsize, ysize=ysize , labels=labels, $
 ; Common Blocks: 
 ;      xstepper_blk     - (xstepper parameters, direction,rebin,etc)
 ;      sda_draw_private - (utility window info (zoom, etc)
+;      index_blk        - (contains index)
 ;
 ;
 ; Restrictions: - only one instance may be run at a time due to common
@@ -831,6 +838,11 @@ if xregistered('xstepper') then begin
 endif
 ; 
 @xstepper.common	;define common block
+
+common index_blk, index
+index = ind
+
+;help, index
 
 mag_fact=1
 
